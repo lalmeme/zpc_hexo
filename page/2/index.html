@@ -86,7 +86,7 @@
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="zhengpc">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
 <meta property="og:site_name" content="zhengpc">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="zhengpc">
@@ -110,7 +110,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/page/2/"/>
 
 
   <title> zhengpc </title>
@@ -238,8 +238,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/03/mongo/" itemprop="url">
-                  mongo
+                <a class="post-title-link" href="/2016/10/14/hello-world/" itemprop="url">
+                  Hello World
                 </a>
               
             
@@ -252,8 +252,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-03T23:39:20+08:00" content="2016-11-03">
-              2016-11-03
+            <time itemprop="dateCreated" datetime="2016-10-14T20:02:30+08:00" content="2016-10-14">
+              2016-10-14
             </time>
           </span>
 
@@ -282,26 +282,15 @@
       
         
           
-            <p>最近完成写mongo shell任务中的一些总结</p>
-<h2 id="进入mongo控制台"><a href="#进入mongo控制台" class="headerlink" title="进入mongo控制台"></a>进入mongo控制台</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mongo   -------我是在unbantu上安装的mongo</div><div class="line">$ use admin  ------切换到admin数据库</div></pre></td></tr></table></figure>
-<p>如果/etc/mongodb.conf中auth=true被放开了，就表示需要认证</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.auth(<span class="string">'username'</span>, <span class="string">'password'</span>)</div></pre></td></tr></table></figure>
-<h2 id="简单的增删查改"><a href="#简单的增删查改" class="headerlink" title="简单的增删查改"></a>简单的增删查改</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].find()</div><div class="line"></div><div class="line">$ db.[表名].find().pretty()</div></pre></td></tr></table></figure>
-<p>第二条命令是让你获取到的数据格式化显示</p>
-<h3 id="根据条件查询"><a href="#根据条件查询" class="headerlink" title="根据条件查询"></a>根据条件查询</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].find(&#123;<span class="string">"_id"</span>:id&#125;).pretty()</div><div class="line"></div><div class="line">$ db.[表名].find(&#123;<span class="string">"comments.name"</span>:<span class="string">"jane"</span>&#125;).pretty()</div></pre></td></tr></table></figure>
-<p>comments为数组，根据数组中的name为jane查询</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].find(&#123;<span class="string">"comments.name"</span>:<span class="string">"jane"</span>&#125;,&#123;<span class="string">"comments.$"</span>:1&#125;).pretty()</div></pre></td></tr></table></figure>
-<p>意思是在上面一个查询上加入一个限制，限制comments数组长度为1</p>
-<h3 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].update(&#123;<span class="string">"_id"</span>:1&#125;,&#123;“_id”:1,<span class="string">"name"</span>:1&#125;)</div></pre></td></tr></table></figure>
-<p>更新_id为1的整条数据</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].update(&#123;&#125;,&#123;<span class="variable">$set</span>:&#123;<span class="string">"sex"</span> : <span class="string">"男"</span>&#125;&#125;, &#123;multi:<span class="literal">true</span>&#125;)</div></pre></td></tr></table></figure>
-<p>上述命令是更新表中所有数据，如果字段sex存在则更新值，不存在则加入sex字段</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].update(&#123;&#125;,&#123;<span class="variable">$unset</span>:&#123;<span class="string">"sex"</span>:1&#125;,&#123;multi:<span class="literal">true</span>&#125;&#125;)</div></pre></td></tr></table></figure>
-<p>删除表中数据中的sex字段,multi表示全表更新,若为false则表示只更新第一条数据</p>
-<p>更新数组<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.[表名].update(&#123;&#125;,&#123;<span class="string">"comments"</span>:[&#123;<span class="string">"name"</span>:<span class="string">"1"</span>, <span class="string">"sex"</span>:<span class="string">"男"</span>&#125;,&#123;<span class="string">"name"</span>:<span class="string">"2"</span>,<span class="string">"sex"</span>:<span class="string">"女"</span>&#125;]&#125;)</div></pre></td></tr></table></figure></p>
-<p>更新数组中的某一条数据<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.[表名].update(&#123;<span class="string">"comments.name"</span>:<span class="string">"1"</span>&#125;,&#123;<span class="string">"comments.$.sex"</span>:<span class="string">"女"</span>&#125;, &#123;<span class="string">"comments.$"</span>:1&#125;)</div></pre></td></tr></table></figure></p>
-<p>更新数组中name为1的那条数据，将sex更新为女</p>
-<h3 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].dorp()</div></pre></td></tr></table></figure>
+            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
 
           
         
@@ -334,7 +323,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
   </nav>
 
 
