@@ -86,7 +86,7 @@
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="zhengpc">
-<meta property="og:url" content="http://yoursite.com/archives/2016/page/2/index.html">
+<meta property="og:url" content="http://yoursite.com/page/3/index.html">
 <meta property="og:site_name" content="zhengpc">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="zhengpc">
@@ -110,10 +110,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2016/page/2/"/>
+  <link rel="canonical" href="http://yoursite.com/page/3/"/>
 
 
-  <title> 归档 | zhengpc </title>
+  <title> zhengpc </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -134,7 +134,9 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  page-archive  ">
+  <div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
@@ -213,70 +215,117 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
+  <section id="posts" class="posts-expand">
+    
+      
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
+  
+  
 
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共计 4 篇日志。 继续努力。
-    </span>
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
 
     
+      <header class="post-header">
 
-      
-      
-      
-
-      
         
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/11/04/nginx/" itemprop="url">
+                  nginx
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-04T22:24:47+08:00" content="2016-11-04">
+              2016-11-04
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
         </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
       
 
       
-
-  <article class="post post-type-normal" itemscope itemtype="//schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
         
-            <a class="post-title-link" href="/2016/11/12/spring/" itemprop="url">
-              
-                <span itemprop="name">spring</span>
-              
-            </a>
+          
+            <p>一篇关于安装启动nginx的文章</p>
+<h2 id="安装nginx"><a href="#安装nginx" class="headerlink" title="安装nginx"></a>安装nginx</h2><h3 id="unbantu安装nginx"><a href="#unbantu安装nginx" class="headerlink" title="unbantu安装nginx"></a>unbantu安装nginx</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ apt-get install nginx</div></pre></td></tr></table></figure>
+<h3 id="mac下安装nginx"><a href="#mac下安装nginx" class="headerlink" title="mac下安装nginx"></a>mac下安装nginx</h3><p>我是安装homebrew后用改工具安装的，下面是mac如何安装homebrew<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ /usr/bin/ruby <span class="_">-e</span> </div><div class="line"><span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)</span>"</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ sudo brew install wget   -----安装软件</div><div class="line"></div><div class="line">$ sudo brew uninstall wget   ------卸载软件</div><div class="line"></div><div class="line">$ sudo brew search /apache*/   ------查看软件, /apache*/用的是正则表达式,用/分割</div></pre></td></tr></table></figure>
+<p>更多关于homebrew请访问: <a href="http://brew.sh/" target="_blank" rel="external">Homebrew</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ brew install nginx      ----安装nginx</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo nginx     -----开启nginx</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nginx <span class="_">-s</span> reload|reopen|stop|quit</div></pre></td></tr></table></figure>
+<p>重新加载配置|重启|停止|退出 nginx</p>
+<p>也可以通过手动配置nginx环境变量安装ngixn,这边不做详述</p>
+
+          
         
-      </h1>
+      
+    </div>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-11-12T23:53:31+08:00"
-              content="2016-11-12" >
-          11-12
-        </time>
-      </div>
+    <div>
+      
+    </div>
 
-    </header>
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
   </article>
 
 
-
     
-
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/2016/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/archives/2016/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/2016/page/3/">3</a><a class="page-number" href="/archives/2016/page/4/">4</a><a class="extend next" rel="next" href="/archives/2016/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
-
 
 
 
@@ -444,12 +493,6 @@
   
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
-
 
   
 

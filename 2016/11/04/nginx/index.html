@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="mongo,database," />
+  <meta name="keywords" content="nginx,server," />
 
 
 
@@ -84,28 +84,22 @@
 
 
 
-<meta name="description" content="最近完成写mongo shell任务中的一些总结
-进入mongo控制台12$ mongo   -------我是在unbantu上安装的mongo$ use admin  ------切换到admin数据库
-如果/etc/mongodb.conf中auth=true被放开了，就表示需要认证
-1$ db.auth(&apos;username&apos;, &apos;password&apos;)
-简单的增删查改123$ db.[表名]">
+<meta name="description" content="一篇关于安装启动nginx的文章
+安装nginxunbantu安装nginx1$ apt-get install nginx
+mac下安装nginx我是安装homebrew后用改工具安装的，下面是mac如何安装homebrew12$ /usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/m">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mongo">
-<meta property="og:url" content="http://yoursite.com/2016/11/03/mongo/index.html">
+<meta property="og:title" content="nginx">
+<meta property="og:url" content="http://yoursite.com/2016/11/04/nginx/index.html">
 <meta property="og:site_name" content="zhengpc">
-<meta property="og:description" content="最近完成写mongo shell任务中的一些总结
-进入mongo控制台12$ mongo   -------我是在unbantu上安装的mongo$ use admin  ------切换到admin数据库
-如果/etc/mongodb.conf中auth=true被放开了，就表示需要认证
-1$ db.auth(&apos;username&apos;, &apos;password&apos;)
-简单的增删查改123$ db.[表名]">
-<meta property="og:updated_time" content="2016-11-04T12:33:22.876Z">
+<meta property="og:description" content="一篇关于安装启动nginx的文章
+安装nginxunbantu安装nginx1$ apt-get install nginx
+mac下安装nginx我是安装homebrew后用改工具安装的，下面是mac如何安装homebrew12$ /usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/m">
+<meta property="og:updated_time" content="2016-11-04T14:40:52.990Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mongo">
-<meta name="twitter:description" content="最近完成写mongo shell任务中的一些总结
-进入mongo控制台12$ mongo   -------我是在unbantu上安装的mongo$ use admin  ------切换到admin数据库
-如果/etc/mongodb.conf中auth=true被放开了，就表示需要认证
-1$ db.auth(&apos;username&apos;, &apos;password&apos;)
-简单的增删查改123$ db.[表名]">
+<meta name="twitter:title" content="nginx">
+<meta name="twitter:description" content="一篇关于安装启动nginx的文章
+安装nginxunbantu安装nginx1$ apt-get install nginx
+mac下安装nginx我是安装homebrew后用改工具安装的，下面是mac如何安装homebrew12$ /usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/m">
 
 
 
@@ -126,10 +120,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/11/03/mongo/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/11/04/nginx/"/>
 
 
-  <title> mongo | zhengpc </title>
+  <title> nginx | zhengpc </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -251,7 +245,7 @@
             
             
               
-                mongo
+                nginx
               
             
           </h1>
@@ -263,8 +257,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-03T23:39:20+08:00" content="2016-11-03">
-              2016-11-03
+            <time itemprop="dateCreated" datetime="2016-11-04T22:24:47+08:00" content="2016-11-04">
+              2016-11-04
             </time>
           </span>
 
@@ -291,26 +285,16 @@
       
 
       
-        <p>最近完成写mongo shell任务中的一些总结</p>
-<h2 id="进入mongo控制台"><a href="#进入mongo控制台" class="headerlink" title="进入mongo控制台"></a>进入mongo控制台</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mongo   -------我是在unbantu上安装的mongo</div><div class="line">$ use admin  ------切换到admin数据库</div></pre></td></tr></table></figure>
-<p>如果/etc/mongodb.conf中auth=true被放开了，就表示需要认证</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.auth(<span class="string">'username'</span>, <span class="string">'password'</span>)</div></pre></td></tr></table></figure>
-<h2 id="简单的增删查改"><a href="#简单的增删查改" class="headerlink" title="简单的增删查改"></a>简单的增删查改</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].find()</div><div class="line"></div><div class="line">$ db.[表名].find().pretty()</div></pre></td></tr></table></figure>
-<p>第二条命令是让你获取到的数据格式化显示</p>
-<h3 id="根据条件查询"><a href="#根据条件查询" class="headerlink" title="根据条件查询"></a>根据条件查询</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].find(&#123;<span class="string">"_id"</span>:id&#125;).pretty()</div><div class="line"></div><div class="line">$ db.[表名].find(&#123;<span class="string">"comments.name"</span>:<span class="string">"jane"</span>&#125;).pretty()</div></pre></td></tr></table></figure>
-<p>comments为数组，根据数组中的name为jane查询</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].find(&#123;<span class="string">"comments.name"</span>:<span class="string">"jane"</span>&#125;,&#123;<span class="string">"comments.$"</span>:1&#125;).pretty()</div></pre></td></tr></table></figure>
-<p>意思是在上面一个查询上加入一个限制，限制comments数组长度为1</p>
-<h3 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].update(&#123;<span class="string">"_id"</span>:1&#125;,&#123;“_id”:1,<span class="string">"name"</span>:1&#125;)</div></pre></td></tr></table></figure>
-<p>更新_id为1的整条数据</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].update(&#123;&#125;,&#123;<span class="variable">$set</span>:&#123;<span class="string">"sex"</span> : <span class="string">"男"</span>&#125;&#125;, &#123;multi:<span class="literal">true</span>&#125;)</div></pre></td></tr></table></figure>
-<p>上述命令是更新表中所有数据，如果字段sex存在则更新值，不存在则加入sex字段</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].update(&#123;&#125;,&#123;<span class="variable">$unset</span>:&#123;<span class="string">"sex"</span>:1&#125;,&#123;multi:<span class="literal">true</span>&#125;&#125;)</div></pre></td></tr></table></figure>
-<p>删除表中数据中的sex字段,multi表示全表更新,若为false则表示只更新第一条数据</p>
-<p>更新数组<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.[表名].update(&#123;&#125;,&#123;<span class="string">"comments"</span>:[&#123;<span class="string">"name"</span>:<span class="string">"1"</span>, <span class="string">"sex"</span>:<span class="string">"男"</span>&#125;,&#123;<span class="string">"name"</span>:<span class="string">"2"</span>,<span class="string">"sex"</span>:<span class="string">"女"</span>&#125;]&#125;)</div></pre></td></tr></table></figure></p>
-<p>更新数组中的某一条数据<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.[表名].update(&#123;<span class="string">"comments.name"</span>:<span class="string">"1"</span>&#125;,&#123;<span class="string">"comments.$.sex"</span>:<span class="string">"女"</span>&#125;, &#123;<span class="string">"comments.$"</span>:1&#125;)</div></pre></td></tr></table></figure></p>
-<p>更新数组中name为1的那条数据，将sex更新为女</p>
-<h3 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].dorp()</div></pre></td></tr></table></figure>
+        <p>一篇关于安装启动nginx的文章</p>
+<h2 id="安装nginx"><a href="#安装nginx" class="headerlink" title="安装nginx"></a>安装nginx</h2><h3 id="unbantu安装nginx"><a href="#unbantu安装nginx" class="headerlink" title="unbantu安装nginx"></a>unbantu安装nginx</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ apt-get install nginx</div></pre></td></tr></table></figure>
+<h3 id="mac下安装nginx"><a href="#mac下安装nginx" class="headerlink" title="mac下安装nginx"></a>mac下安装nginx</h3><p>我是安装homebrew后用改工具安装的，下面是mac如何安装homebrew<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ /usr/bin/ruby <span class="_">-e</span> </div><div class="line"><span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)</span>"</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ sudo brew install wget   -----安装软件</div><div class="line"></div><div class="line">$ sudo brew uninstall wget   ------卸载软件</div><div class="line"></div><div class="line">$ sudo brew search /apache*/   ------查看软件, /apache*/用的是正则表达式,用/分割</div></pre></td></tr></table></figure>
+<p>更多关于homebrew请访问: <a href="http://brew.sh/" target="_blank" rel="external">Homebrew</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ brew install nginx      ----安装nginx</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo nginx     -----开启nginx</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nginx <span class="_">-s</span> reload|reopen|stop|quit</div></pre></td></tr></table></figure>
+<p>重新加载配置|重启|停止|退出 nginx</p>
+<p>也可以通过手动配置nginx环境变量安装ngixn,这边不做详述</p>
 
       
     </div>
@@ -333,9 +317,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/mongo/" rel="tag">#mongo</a>
+            <a href="/tags/nginx/" rel="tag">#nginx</a>
           
-            <a href="/tags/database/" rel="tag">#database</a>
+            <a href="/tags/server/" rel="tag">#server</a>
           
         </div>
       
@@ -344,12 +328,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/11/03/mongo/" rel="next" title="mongo">
+                <i class="fa fa-chevron-left"></i> mongo
+              </a>
+            
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/11/04/nginx/" rel="prev" title="nginx">
-                nginx <i class="fa fa-chevron-right"></i>
+              <a href="/2016/11/12/spring/" rel="prev" title="spring">
+                spring <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -457,7 +445,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#进入mongo控制台"><span class="nav-number">1.</span> <span class="nav-text">进入mongo控制台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单的增删查改"><span class="nav-number">2.</span> <span class="nav-text">简单的增删查改</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#根据条件查询"><span class="nav-number">2.1.</span> <span class="nav-text">根据条件查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新数据"><span class="nav-number">2.2.</span> <span class="nav-text">更新数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除表"><span class="nav-number">2.3.</span> <span class="nav-text">删除表</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装nginx"><span class="nav-number">1.</span> <span class="nav-text">安装nginx</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#unbantu安装nginx"><span class="nav-number">1.1.</span> <span class="nav-text">unbantu安装nginx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mac下安装nginx"><span class="nav-number">1.2.</span> <span class="nav-text">mac下安装nginx</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
