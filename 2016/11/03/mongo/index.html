@@ -98,7 +98,7 @@
 如果/etc/mongodb.conf中auth=true被放开了，就表示需要认证
 1$ db.auth(&apos;username&apos;, &apos;password&apos;)
 简单的增删查改123$ db.[表名]">
-<meta property="og:updated_time" content="2016-11-04T12:33:22.876Z">
+<meta property="og:updated_time" content="2016-11-15T14:10:02.543Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mongo">
 <meta name="twitter:description" content="最近完成写mongo shell任务中的一些总结
@@ -311,6 +311,8 @@
 <p>更新数组中的某一条数据<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.[表名].update(&#123;<span class="string">"comments.name"</span>:<span class="string">"1"</span>&#125;,&#123;<span class="string">"comments.$.sex"</span>:<span class="string">"女"</span>&#125;, &#123;<span class="string">"comments.$"</span>:1&#125;)</div></pre></td></tr></table></figure></p>
 <p>更新数组中name为1的那条数据，将sex更新为女</p>
 <h3 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].dorp()</div></pre></td></tr></table></figure>
+<h2 id="shell中使用mongodb语句"><a href="#shell中使用mongodb语句" class="headerlink" title="shell中使用mongodb语句"></a>shell中使用mongodb语句</h2><h3 id="今天遇到了一个坑，原来数据是int类型的，用shell脚本修改后变成double了"><a href="#今天遇到了一个坑，原来数据是int类型的，用shell脚本修改后变成double了" class="headerlink" title="今天遇到了一个坑，原来数据是int类型的，用shell脚本修改后变成double了"></a>今天遇到了一个坑，原来数据是int类型的，用shell脚本修改后变成double了</h3><p>查询了资料是因为shell中默认的就是double，所以需要经过mongodb的NumberInt(值)进行转化。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ var int = NumberInt(2);</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -418,7 +420,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -428,7 +430,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -457,7 +459,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#进入mongo控制台"><span class="nav-number">1.</span> <span class="nav-text">进入mongo控制台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单的增删查改"><span class="nav-number">2.</span> <span class="nav-text">简单的增删查改</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#根据条件查询"><span class="nav-number">2.1.</span> <span class="nav-text">根据条件查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新数据"><span class="nav-number">2.2.</span> <span class="nav-text">更新数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除表"><span class="nav-number">2.3.</span> <span class="nav-text">删除表</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#进入mongo控制台"><span class="nav-number">1.</span> <span class="nav-text">进入mongo控制台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单的增删查改"><span class="nav-number">2.</span> <span class="nav-text">简单的增删查改</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#根据条件查询"><span class="nav-number">2.1.</span> <span class="nav-text">根据条件查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新数据"><span class="nav-number">2.2.</span> <span class="nav-text">更新数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除表"><span class="nav-number">2.3.</span> <span class="nav-text">删除表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shell中使用mongodb语句"><span class="nav-number">3.</span> <span class="nav-text">shell中使用mongodb语句</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#今天遇到了一个坑，原来数据是int类型的，用shell脚本修改后变成double了"><span class="nav-number">3.1.</span> <span class="nav-text">今天遇到了一个坑，原来数据是int类型的，用shell脚本修改后变成double了</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
