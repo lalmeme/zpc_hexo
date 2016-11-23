@@ -238,8 +238,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/04/nginx/" itemprop="url">
-                  nginx
+                <a class="post-title-link" href="/2016/11/14/jersey/" itemprop="url">
+                  jersey
                 </a>
               
             
@@ -252,8 +252,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-04T22:24:47+08:00" content="2016-11-04">
-              2016-11-04
+            <time itemprop="dateCreated" datetime="2016-11-14T23:32:25+08:00" content="2016-11-14">
+              2016-11-14
             </time>
           </span>
 
@@ -282,16 +282,10 @@
       
         
           
-            <p>一篇关于安装启动nginx的文章</p>
-<h2 id="安装nginx"><a href="#安装nginx" class="headerlink" title="安装nginx"></a>安装nginx</h2><h3 id="unbantu安装nginx"><a href="#unbantu安装nginx" class="headerlink" title="unbantu安装nginx"></a>unbantu安装nginx</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ apt-get install nginx</div></pre></td></tr></table></figure>
-<h3 id="mac下安装nginx"><a href="#mac下安装nginx" class="headerlink" title="mac下安装nginx"></a>mac下安装nginx</h3><p>我是安装homebrew后用改工具安装的，下面是mac如何安装homebrew<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ /usr/bin/ruby <span class="_">-e</span> </div><div class="line"><span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)</span>"</span></div></pre></td></tr></table></figure></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ sudo brew install wget   -----安装软件</div><div class="line"></div><div class="line">$ sudo brew uninstall wget   ------卸载软件</div><div class="line"></div><div class="line">$ sudo brew search /apache*/   ------查看软件, /apache*/用的是正则表达式,用/分割</div></pre></td></tr></table></figure>
-<p>更多关于homebrew请访问: <a href="http://brew.sh/" target="_blank" rel="external">Homebrew</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ brew install nginx      ----安装nginx</div></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo nginx     -----开启nginx</div></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nginx <span class="_">-s</span> reload|reopen|stop|quit</div></pre></td></tr></table></figure>
-<p>重新加载配置|重启|停止|退出 nginx</p>
-<p>也可以通过手动配置nginx环境变量安装ngixn,这边不做详述</p>
+            <p>jersey框架实现restful</p>
+<h2 id="注意-Jersey-servlet-的配置，javax-ws-rs-core-Application-类定义了-JAX-RS-应用组件-root-资源-和-提供者-类-本例使用-ResourceConfig-是-Jersey-自己实现的-Application-类-，提供了简化-JAX-RS-组件的能力。详见JAX-RS-应用模型com-zpc-bookstore-BookStoreApplication-是自己实现的-ResourceConfig类，注册应用的-resources-filters-exception-mappers-和-feature"><a href="#注意-Jersey-servlet-的配置，javax-ws-rs-core-Application-类定义了-JAX-RS-应用组件-root-资源-和-提供者-类-本例使用-ResourceConfig-是-Jersey-自己实现的-Application-类-，提供了简化-JAX-RS-组件的能力。详见JAX-RS-应用模型com-zpc-bookstore-BookStoreApplication-是自己实现的-ResourceConfig类，注册应用的-resources-filters-exception-mappers-和-feature" class="headerlink" title="注意 Jersey servlet 的配置，javax.ws.rs.core.Application 类定义了 JAX-RS 应用组件(root 资源 和 提供者 类) .本例使用 ResourceConfig, 是 Jersey 自己实现的 Application 类,，提供了简化 JAX-RS 组件的能力。详见JAX-RS 应用模型com.zpc.bookstore.BookStoreApplication 是自己实现的 ResourceConfig类，注册应用的 resources, filters, exception mappers 和 feature:"></a>注意 Jersey servlet 的配置，javax.ws.rs.core.Application 类定义了 JAX-RS 应用组件(root 资源 和 提供者 类) .本例使用 ResourceConfig, 是 Jersey 自己实现的 Application 类,，提供了简化 JAX-RS 组件的能力。详见JAX-RS 应用模型com.zpc.bookstore.BookStoreApplication 是自己实现的 ResourceConfig类，注册应用的 resources, filters, exception mappers 和 feature:</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">public class BookStoreApplication extends ResourceConfig &#123;</div><div class="line">    public <span class="function"><span class="title">BookStoreApplication</span></span>() &#123;</div><div class="line">        packages(<span class="string">"com.zpc.bookstore"</span>);</div><div class="line"></div><div class="line">        register(UserController.class);</div><div class="line"></div><div class="line">        // register filters</div><div class="line">        register(RequestContextFilter.class);</div><div class="line"></div><div class="line"></div><div class="line">        register(EntityFilteringFeature.class);</div><div class="line">        EncodingFilter.enableFor(this, GZipEncoder.class);</div><div class="line"></div><div class="line">        //注册JSON转换器</div><div class="line">        register(JacksonJsonProvider.class);</div><div class="line"></div><div class="line">        //打印访问日志，便于跟踪调试，正式发布可清除</div><div class="line">        register(LoggingFilter.class);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果你遗漏了你的UserController的注册启动服务器后定位到该资源时可能会报如下错误:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Servlet.init() <span class="keyword">for</span> servlet Jersey Web Application threw exception</div></pre></td></tr></table></figure>
 
           
         
@@ -324,7 +318,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -365,7 +359,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -375,7 +369,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
