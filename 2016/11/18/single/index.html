@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/11/18/single/index.html">
 <meta property="og:site_name" content="zhengpc">
 <meta property="og:description" content="最近看到很多写单例模式的地方，感觉都有点问题，下面来简单讲述一下java单例模式的集中写法。一般的写法12345678910$ public class Single &amp;#123;$   public static Single single;$   private Single()&amp;#123;&amp;#125;$   public static Single getInstance() &amp;#123;$">
-<meta property="og:updated_time" content="2016-11-22T15:08:33.094Z">
+<meta property="og:updated_time" content="2016-12-07T14:05:43.082Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="single">
 <meta name="twitter:description" content="最近看到很多写单例模式的地方，感觉都有点问题，下面来简单讲述一下java单例模式的集中写法。一般的写法12345678910$ public class Single &amp;#123;$   public static Single single;$   private Single()&amp;#123;&amp;#125;$   public static Single getInstance() &amp;#123;$">
@@ -285,7 +285,7 @@
 <p>解决多线程同步问题，但是降低性能。</p>
 <h3 id="修改方案二"><a href="#修改方案二" class="headerlink" title="修改方案二"></a>修改方案二</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">$ public class Single &#123;</div><div class="line">$   public volatile static Single single;</div><div class="line">$   private <span class="function"><span class="title">Single</span></span>() &#123;&#125;</div><div class="line">$   public static Single <span class="function"><span class="title">getInstance</span></span>() &#123;</div><div class="line">$     <span class="keyword">if</span>(null == single) &#123;</div><div class="line">$       synchronized(Single.class) &#123;</div><div class="line">$       <span class="keyword">if</span>(null == single) &#123;</div><div class="line">$         single = new Single();</div><div class="line">$       &#125;</div><div class="line">$     &#125;</div><div class="line">$   &#125;</div><div class="line">$   <span class="built_in">return</span> single;</div><div class="line">$   &#125;</div><div class="line">$  &#125;</div></pre></td></tr></table></figure>
 <p>双重检查锁定</p>
-<h3 id="修改方案三"><a href="#修改方案三" class="headerlink" title="修改方案三"></a>修改方案三</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ public Enum Single &#123;</div><div class="line">$  INSTANCE;</div><div class="line">$  public void <span class="function"><span class="title">methodA</span></span>()&#123;&#125;</div><div class="line">$  &#125;</div><div class="line">``` </div><div class="line"></div><div class="line">这种方法的用法就是Single.INSTANCE.methodA()。因为枚举类型本身就是线程安全的。还能防止反序列化重新创建新的对象。推荐使用枚举类型。</div><div class="line"></div><div class="line"><span class="comment">### 修改方案四，今天刚看到</span></div><div class="line"></div><div class="line">``` bash</div><div class="line">public class Single &#123;</div><div class="line">    private static class InnerSingle &#123;</div><div class="line">        private static Single innerSingle = new Single();</div><div class="line">    &#125;</div><div class="line">    public static Single <span class="function"><span class="title">getSingle</span></span>() &#123;</div><div class="line">        <span class="built_in">return</span> InnerSingle.innerSingle;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="修改方案三"><a href="#修改方案三" class="headerlink" title="修改方案三"></a>修改方案三</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public Enum Single &#123;</div><div class="line">  INSTANCE;</div><div class="line">  public void <span class="function"><span class="title">methodA</span></span>()&#123;&#125;</div><div class="line"> &#125;</div><div class="line">``` </div><div class="line"></div><div class="line">这种方法的用法就是Single.INSTANCE.methodA()。因为枚举类型本身就是线程安全的。还能防止反序列化重新创建新的对象。推荐使用枚举类型。</div><div class="line"></div><div class="line"><span class="comment">### 修改方案四</span></div><div class="line"></div><div class="line">``` bash</div><div class="line">public class Single &#123;</div><div class="line">    private static class InnerSingle &#123;</div><div class="line">        private static Single innerSingle = new Single();</div><div class="line">    &#125;</div><div class="line">    public static Single <span class="function"><span class="title">getSingle</span></span>() &#123;</div><div class="line">        <span class="built_in">return</span> InnerSingle.innerSingle;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>静态内部类只会被实例化一次。</p>
 
       
@@ -398,7 +398,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -408,7 +408,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

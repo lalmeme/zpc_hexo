@@ -238,8 +238,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/03/mongo/" itemprop="url">
-                  mongo
+                <a class="post-title-link" href="/2016/11/04/nginx/" itemprop="url">
+                  nginx
                 </a>
               
             
@@ -252,8 +252,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-03T23:39:20+08:00" content="2016-11-03">
-              2016-11-03
+            <time itemprop="dateCreated" datetime="2016-11-04T22:24:47+08:00" content="2016-11-04">
+              2016-11-04
             </time>
           </span>
 
@@ -282,28 +282,16 @@
       
         
           
-            <p>最近完成写mongo shell任务中的一些总结</p>
-<h2 id="进入mongo控制台"><a href="#进入mongo控制台" class="headerlink" title="进入mongo控制台"></a>进入mongo控制台</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mongo   -------我是在unbantu上安装的mongo</div><div class="line">$ use admin  ------切换到admin数据库</div></pre></td></tr></table></figure>
-<p>如果/etc/mongodb.conf中auth=true被放开了，就表示需要认证</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.auth(<span class="string">'username'</span>, <span class="string">'password'</span>)</div></pre></td></tr></table></figure>
-<h2 id="简单的增删查改"><a href="#简单的增删查改" class="headerlink" title="简单的增删查改"></a>简单的增删查改</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].find()</div><div class="line"></div><div class="line">$ db.[表名].find().pretty()</div></pre></td></tr></table></figure>
-<p>第二条命令是让你获取到的数据格式化显示</p>
-<h3 id="根据条件查询"><a href="#根据条件查询" class="headerlink" title="根据条件查询"></a>根据条件查询</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].find(&#123;<span class="string">"_id"</span>:id&#125;).pretty()</div><div class="line"></div><div class="line">$ db.[表名].find(&#123;<span class="string">"comments.name"</span>:<span class="string">"jane"</span>&#125;).pretty()</div></pre></td></tr></table></figure>
-<p>comments为数组，根据数组中的name为jane查询</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].find(&#123;<span class="string">"comments.name"</span>:<span class="string">"jane"</span>&#125;,&#123;<span class="string">"comments.$"</span>:1&#125;).pretty()</div></pre></td></tr></table></figure>
-<p>意思是在上面一个查询上加入一个限制，限制comments数组长度为1</p>
-<h3 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].update(&#123;<span class="string">"_id"</span>:1&#125;,&#123;“_id”:1,<span class="string">"name"</span>:1&#125;)</div></pre></td></tr></table></figure>
-<p>更新_id为1的整条数据</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].update(&#123;&#125;,&#123;<span class="variable">$set</span>:&#123;<span class="string">"sex"</span> : <span class="string">"男"</span>&#125;&#125;, &#123;multi:<span class="literal">true</span>&#125;)</div></pre></td></tr></table></figure>
-<p>上述命令是更新表中所有数据，如果字段sex存在则更新值，不存在则加入sex字段</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].update(&#123;&#125;,&#123;<span class="variable">$unset</span>:&#123;<span class="string">"sex"</span>:1&#125;,&#123;multi:<span class="literal">true</span>&#125;&#125;)</div></pre></td></tr></table></figure>
-<p>删除表中数据中的sex字段,multi表示全表更新,若为false则表示只更新第一条数据</p>
-<p>更新数组<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.[表名].update(&#123;&#125;,&#123;<span class="string">"comments"</span>:[&#123;<span class="string">"name"</span>:<span class="string">"1"</span>, <span class="string">"sex"</span>:<span class="string">"男"</span>&#125;,&#123;<span class="string">"name"</span>:<span class="string">"2"</span>,<span class="string">"sex"</span>:<span class="string">"女"</span>&#125;]&#125;)</div></pre></td></tr></table></figure></p>
-<p>更新数组中的某一条数据<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.[表名].update(&#123;<span class="string">"comments.name"</span>:<span class="string">"1"</span>&#125;,&#123;<span class="string">"comments.$.sex"</span>:<span class="string">"女"</span>&#125;, &#123;<span class="string">"comments.$"</span>:1&#125;)</div></pre></td></tr></table></figure></p>
-<p>更新数组中name为1的那条数据，将sex更新为女</p>
-<h3 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ db.[表名].dorp()</div></pre></td></tr></table></figure>
-<h2 id="shell中使用mongodb语句"><a href="#shell中使用mongodb语句" class="headerlink" title="shell中使用mongodb语句"></a>shell中使用mongodb语句</h2><h3 id="今天遇到了一个坑，原来数据是int类型的，用shell脚本修改后变成double了"><a href="#今天遇到了一个坑，原来数据是int类型的，用shell脚本修改后变成double了" class="headerlink" title="今天遇到了一个坑，原来数据是int类型的，用shell脚本修改后变成double了"></a>今天遇到了一个坑，原来数据是int类型的，用shell脚本修改后变成double了</h3><p>查询了资料是因为shell中默认的就是double，所以需要经过mongodb的NumberInt(值)进行转化。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ var int = NumberInt(2);</div></pre></td></tr></table></figure>
+            <p>一篇关于安装启动nginx的文章</p>
+<h2 id="安装nginx"><a href="#安装nginx" class="headerlink" title="安装nginx"></a>安装nginx</h2><h3 id="unbantu安装nginx"><a href="#unbantu安装nginx" class="headerlink" title="unbantu安装nginx"></a>unbantu安装nginx</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ apt-get install nginx</div></pre></td></tr></table></figure>
+<h3 id="mac下安装nginx"><a href="#mac下安装nginx" class="headerlink" title="mac下安装nginx"></a>mac下安装nginx</h3><p>我是安装homebrew后用改工具安装的，下面是mac如何安装homebrew<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ /usr/bin/ruby <span class="_">-e</span> </div><div class="line"><span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)</span>"</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ sudo brew install wget   -----安装软件</div><div class="line"></div><div class="line">$ sudo brew uninstall wget   ------卸载软件</div><div class="line"></div><div class="line">$ sudo brew search /apache*/   ------查看软件, /apache*/用的是正则表达式,用/分割</div></pre></td></tr></table></figure>
+<p>更多关于homebrew请访问: <a href="http://brew.sh/" target="_blank" rel="external">Homebrew</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ brew install nginx      ----安装nginx</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo nginx     -----开启nginx</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nginx <span class="_">-s</span> reload|reopen|stop|quit</div></pre></td></tr></table></figure>
+<p>重新加载配置|重启|停止|退出 nginx</p>
+<p>也可以通过手动配置nginx环境变量安装ngixn,这边不做详述</p>
 
           
         
@@ -336,7 +324,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -377,7 +365,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -387,7 +375,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
