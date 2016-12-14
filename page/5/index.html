@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion">
+<html class="theme-next pisces use-motion">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -68,11 +68,13 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="java学习笔记" />
 
 
 
 
+
+  <link rel="alternate" href="/rss" title="zhengpc" type="application/atom+xml" />
 
 
 
@@ -84,20 +86,23 @@
 
 
 
+<meta name="description" content="倚天照海花无数，流水高山心自知">
 <meta property="og:type" content="website">
 <meta property="og:title" content="zhengpc">
 <meta property="og:url" content="http://yoursite.com/page/5/index.html">
 <meta property="og:site_name" content="zhengpc">
+<meta property="og:description" content="倚天照海花无数，流水高山心自知">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="zhengpc">
+<meta name="twitter:description" content="倚天照海花无数，流水高山心自知">
 
 
 
 <script type="text/javascript" id="hexo.configuration">
   var NexT = window.NexT || {};
   var CONFIG = {
-    scheme: 'Muse',
-    sidebar: {"position":"left","display":"post"},
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
     fancybox: true,
     motion: true,
     duoshuo: {
@@ -201,9 +206,30 @@
       
 
       
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+            搜索
+          </a>
+        </li>
+      
     </ul>
   
 
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
   
 </nav>
 
@@ -238,8 +264,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/18/single/" itemprop="url">
-                  single
+                <a class="post-title-link" href="/2016/11/23/hashset/" itemprop="url">
+                  hashset
                 </a>
               
             
@@ -252,8 +278,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-18T20:24:10+08:00" content="2016-11-18">
-              2016-11-18
+            <time itemprop="dateCreated" datetime="2016-11-23T22:03:54+08:00" content="2016-11-23">
+              2016-11-23
             </time>
           </span>
 
@@ -282,14 +308,20 @@
       
         
           
-            <h2 id="最近看到很多写单例模式的地方，感觉都有点问题，下面来简单讲述一下java单例模式的集中写法。"><a href="#最近看到很多写单例模式的地方，感觉都有点问题，下面来简单讲述一下java单例模式的集中写法。" class="headerlink" title="最近看到很多写单例模式的地方，感觉都有点问题，下面来简单讲述一下java单例模式的集中写法。"></a>最近看到很多写单例模式的地方，感觉都有点问题，下面来简单讲述一下java单例模式的集中写法。</h2><h3 id="一般的写法"><a href="#一般的写法" class="headerlink" title="一般的写法"></a>一般的写法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ public class Single &#123;</div><div class="line">$   public static Single single;</div><div class="line">$   private <span class="function"><span class="title">Single</span></span>()&#123;&#125;</div><div class="line">$   public static Single <span class="function"><span class="title">getInstance</span></span>() &#123;</div><div class="line">$   <span class="keyword">if</span>(null == single) &#123;</div><div class="line">$     single = new Single();</div><div class="line">$     &#125;</div><div class="line">$     <span class="built_in">return</span> single;</div><div class="line">$   &#125;</div><div class="line">$ &#125;</div></pre></td></tr></table></figure>
-<p>深入思考就会发现这么写存在问题，它不是线程安全的(多个线程会同时运行到该代码，且每次得到的结果不是都是一样的)。为什么这么说，因为这段代码被两个线程同时运行，会new出两个对象来。</p>
-<h3 id="修改方案一"><a href="#修改方案一" class="headerlink" title="修改方案一"></a>修改方案一</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ public class Single &#123;</div><div class="line">$   public static Single single;</div><div class="line">$   private <span class="function"><span class="title">Single</span></span>()&#123;&#125;    //私有的构造方法</div><div class="line">$   public static sychronized Single <span class="function"><span class="title">getInstance</span></span>() &#123;</div><div class="line">$     <span class="keyword">if</span>(null == single) &#123;</div><div class="line">$       single = new Single();</div><div class="line">$     &#125;</div><div class="line">$     reurn single;</div><div class="line">$   &#125;</div><div class="line">$ &#125;</div></pre></td></tr></table></figure>
-<p>解决多线程同步问题，但是降低性能。</p>
-<h3 id="修改方案二"><a href="#修改方案二" class="headerlink" title="修改方案二"></a>修改方案二</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">$ public class Single &#123;</div><div class="line">$   public volatile static Single single;</div><div class="line">$   private <span class="function"><span class="title">Single</span></span>() &#123;&#125;</div><div class="line">$   public static Single <span class="function"><span class="title">getInstance</span></span>() &#123;</div><div class="line">$     <span class="keyword">if</span>(null == single) &#123;</div><div class="line">$       synchronized(Single.class) &#123;</div><div class="line">$       <span class="keyword">if</span>(null == single) &#123;</div><div class="line">$         single = new Single();</div><div class="line">$       &#125;</div><div class="line">$     &#125;</div><div class="line">$   &#125;</div><div class="line">$   <span class="built_in">return</span> single;</div><div class="line">$   &#125;</div><div class="line">$  &#125;</div></pre></td></tr></table></figure>
-<p>双重检查锁定</p>
-<h3 id="修改方案三"><a href="#修改方案三" class="headerlink" title="修改方案三"></a>修改方案三</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public Enum Single &#123;</div><div class="line">  INSTANCE;</div><div class="line">  public void <span class="function"><span class="title">methodA</span></span>()&#123;&#125;</div><div class="line"> &#125;</div><div class="line">``` </div><div class="line"></div><div class="line">这种方法的用法就是Single.INSTANCE.methodA()。因为枚举类型本身就是线程安全的。还能防止反序列化重新创建新的对象。推荐使用枚举类型。</div><div class="line"></div><div class="line"><span class="comment">### 修改方案四</span></div><div class="line"></div><div class="line">``` bash</div><div class="line">public class Single &#123;</div><div class="line">    private static class InnerSingle &#123;</div><div class="line">        private static Single innerSingle = new Single();</div><div class="line">    &#125;</div><div class="line">    public static Single <span class="function"><span class="title">getSingle</span></span>() &#123;</div><div class="line">        <span class="built_in">return</span> InnerSingle.innerSingle;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>静态内部类只会被实例化一次。</p>
+            <p>对于 HashSet 而言，它是基于 HashMap 实现的，底层采用 HashMap 来保存元素，所以如果对 HashMap 比较熟悉了，那么学习 HashSet 也是很轻松的。</p>
+<p>我们先通过 HashSet 最简单的构造函数和几个成员变量来看一下，证明咱们上边说的，其底层是 HashMap：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">private transient HashMap&lt;E,Object&gt; map;</div><div class="line"></div><div class="line">// Dummy value to associate with an Object <span class="keyword">in</span> the backing Map</div><div class="line">private static final Object PRESENT = new Object();</div><div class="line"></div><div class="line">/**</div><div class="line"> * Constructs a new, empty <span class="built_in">set</span>; the backing &lt;tt&gt;HashMap&lt;/tt&gt; instance has</div><div class="line"> * default initial capacity (16) and load factor (0.75).</div><div class="line"> */</div><div class="line">public <span class="function"><span class="title">HashSet</span></span>() &#123;</div><div class="line">    map = new HashMap&lt;&gt;();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其实在英文注释中已经说的比较明确了。首先有一个HashMap的成员变量，我们在 HashSet 的构造函数中将其初始化，默认情况下采用的是 initial capacity为16，load factor 为 0.75。</p>
+<p>HashSet 的实现<br>对于 HashSet 而言，它是基于 HashMap 实现的，HashSet 底层使用 HashMap 来保存所有元素，因此 HashSet 的实现比较简单，相关 HashSet 的操作，基本上都是直接调用底层 HashMap 的相关方法来完成，我们应该为保存到 HashSet 中的对象覆盖 hashCode() 和 equals()</p>
+<p>构造方法</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 默认的无参构造器，构造一个空的HashSet。</div><div class="line"> *</div><div class="line"> * 实际底层会初始化一个空的HashMap，并使用默认初始容量为16和加载因子0.75。</div><div class="line"> */</div><div class="line">public <span class="function"><span class="title">HashSet</span></span>() &#123;</div><div class="line">    map = new HashMap&lt;E,Object&gt;();</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 构造一个包含指定collection中的元素的新<span class="built_in">set</span>。</div><div class="line"> *</div><div class="line"> * 实际底层使用默认的加载因子0.75和足以包含指定collection中所有元素的初始容量来创建一个HashMap。</div><div class="line"> * @param c 其中的元素将存放在此<span class="built_in">set</span>中的collection。</div><div class="line"> */</div><div class="line">public HashSet(Collection&lt;? extends E&gt; c) &#123;</div><div class="line">    map = new HashMap&lt;E,Object&gt;(Math.max((int) (c.size()/.75f) + 1, 16));</div><div class="line">    addAll(c);</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 以指定的initialCapacity和loadFactor构造一个空的HashSet。</div><div class="line"> *</div><div class="line"> * 实际底层以相应的参数构造一个空的HashMap。</div><div class="line"> * @param initialCapacity 初始容量。</div><div class="line"> * @param loadFactor 加载因子。</div><div class="line"> */</div><div class="line">public HashSet(int initialCapacity, <span class="built_in">float</span> loadFactor) &#123;</div><div class="line">    map = new HashMap&lt;E,Object&gt;(initialCapacity, loadFactor);</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 以指定的initialCapacity构造一个空的HashSet。</div><div class="line"> *</div><div class="line"> * 实际底层以相应的参数及加载因子loadFactor为0.75构造一个空的HashMap。</div><div class="line"> * @param initialCapacity 初始容量。</div><div class="line"> */</div><div class="line">public HashSet(int initialCapacity) &#123;</div><div class="line">    map = new HashMap&lt;E,Object&gt;(initialCapacity);</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 以指定的initialCapacity和loadFactor构造一个新的空链接哈希集合。此构造函数为包访问权限，不对外公开，</div><div class="line"> * 实际只是是对LinkedHashSet的支持。</div><div class="line"> *</div><div class="line"> * 实际底层会以指定的参数构造一个空LinkedHashMap实例来实现。</div><div class="line"> * @param initialCapacity 初始容量。</div><div class="line"> * @param loadFactor 加载因子。</div><div class="line"> * @param dummy 标记。</div><div class="line"> */</div><div class="line">HashSet(int initialCapacity, <span class="built_in">float</span> loadFactor, boolean dummy) &#123;</div><div class="line">    map = new LinkedHashMap&lt;E,Object&gt;(initialCapacity, loadFactor);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>add 方法</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * @param e 将添加到此<span class="built_in">set</span>中的元素。</div><div class="line"> * @<span class="built_in">return</span> 如果此<span class="built_in">set</span>尚未包含指定元素，则返回<span class="literal">true</span>。</div><div class="line"> */</div><div class="line">public boolean add(E e) &#123;</div><div class="line">    <span class="built_in">return</span> map.put(e, PRESENT)==null;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果此 set 中尚未包含指定元素，则添加指定元素。更确切地讲，如果此 set 没有包含满足(e==null ? e2==null : e.equals(e2)) 的元素 e2，则向此 set 添加指定的元素 e。如果此 set 已包含该元素，则该调用不更改 set 并返回 false。但底层实际将将该元素作为 key 放入 HashMap。思考一下为什么？</p>
+<p>由于 HashMap 的 put() 方法添加 key-value 对时，当新放入 HashMap 的 Entry 中 key 与集合中原有 Entry 的 key 相同（hashCode()返回值相等，通过 equals 比较也返回 true），新添加的 Entry 的 value 会将覆盖原来 Entry 的 value（HashSet 中的 value 都是PRESENT），但 key 不会有任何改变，因此如果向 HashSet 中添加一个已经存在的元素时，新添加的集合元素将不会被放入 HashMap中，原来的元素也不会有任何改变，这也就满足了 Set 中元素不重复的特性。</p>
+<p>该方法如果添加的是在 HashSet 中不存在的，则返回 true；如果添加的元素已经存在，返回 false。其原因在于我们之前提到的关于 HashMap 的 put 方法。该方法在添加 key 不重复的键值对的时候，会返回 null。</p>
+<p>其余方法</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">    /**</div><div class="line">     * 如果此<span class="built_in">set</span>包含指定元素，则返回<span class="literal">true</span>。</div><div class="line">     * 更确切地讲，当且仅当此<span class="built_in">set</span>包含一个满足(o==null ? e==null : o.equals(e))的e元素时，返回<span class="literal">true</span>。</div><div class="line">     *</div><div class="line">     * 底层实际调用HashMap的containsKey判断是否包含指定key。</div><div class="line">     * @param o 在此<span class="built_in">set</span>中的存在已得到测试的元素。</div><div class="line">     * @<span class="built_in">return</span> 如果此<span class="built_in">set</span>包含指定元素，则返回<span class="literal">true</span>。</div><div class="line">     */</div><div class="line">    public boolean contains(Object o) &#123;</div><div class="line">    <span class="built_in">return</span> map.containsKey(o);</div><div class="line">    &#125;</div><div class="line">    /**</div><div class="line">     * 如果指定元素存在于此<span class="built_in">set</span>中，则将其移除。更确切地讲，如果此<span class="built_in">set</span>包含一个满足(o==null ? e==null : o.equals(e))的元素e，</div><div class="line">     * 则将其移除。如果此<span class="built_in">set</span>已包含该元素，则返回<span class="literal">true</span></div><div class="line">     *</div><div class="line">     * 底层实际调用HashMap的remove方法删除指定Entry。</div><div class="line">     * @param o 如果存在于此<span class="built_in">set</span>中则需要将其移除的对象。</div><div class="line">     * @<span class="built_in">return</span> 如果<span class="built_in">set</span>包含指定元素，则返回<span class="literal">true</span>。</div><div class="line">     */</div><div class="line">    public boolean remove(Object o) &#123;</div><div class="line">    <span class="built_in">return</span> map.remove(o)==PRESENT;</div><div class="line">    &#125;</div><div class="line">    /**</div><div class="line">     * 返回此HashSet实例的浅表副本：并没有复制这些元素本身。</div><div class="line">     *</div><div class="line">     * 底层实际调用HashMap的<span class="built_in">clone</span>()方法，获取HashMap的浅表副本，并设置到HashSet中。</div><div class="line">     */</div><div class="line">    public Object <span class="function"><span class="title">clone</span></span>() &#123;</div><div class="line">        try &#123;</div><div class="line">            HashSet&lt;E&gt; newSet = (HashSet&lt;E&gt;) super.clone();</div><div class="line">            newSet.map = (HashMap&lt;E, Object&gt;) map.clone();</div><div class="line">            <span class="built_in">return</span> newSet;</div><div class="line">        &#125; catch (CloneNotSupportedException e) &#123;</div><div class="line">            throw new InternalError();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
           
         
@@ -322,7 +354,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -355,15 +387,15 @@
       <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/images/avatar.gif"
+               src="/uploads/1.jpg"
                alt="zhengpc" />
           <p class="site-author-name" itemprop="name">zhengpc</p>
-          <p class="site-description motion-element" itemprop="description"></p>
+          <p class="site-description motion-element" itemprop="description">倚天照海花无数，流水高山心自知</p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">13</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -373,7 +405,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -382,8 +414,35 @@
         </nav>
 
         
+          <div class="feed-link motion-element">
+            <a href="/rss" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
 
         <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lalmeme" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zheng-pei-chun" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
           
         </div>
 
@@ -424,7 +483,7 @@
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Muse
+    NexT.Pisces
   </a>
 </div>
 
@@ -490,6 +549,13 @@
   
   
 
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
   
 
   
@@ -510,6 +576,132 @@
 
   
   
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = false;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = decodeURIComponent(data.url);
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title >= 0 || index_content >= 0 ){
+                                isMatch = true;
+								if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            } 
+							
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
 
   
 
