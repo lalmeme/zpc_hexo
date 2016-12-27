@@ -1,0 +1,757 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="LRU缓存,LinkedHashMap," />
+
+
+
+
+
+  <link rel="alternate" href="/rss" title="zhengpc" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="本文介绍用LinkedHashMap作为LRU缓存LRULRU 是 Least Recently Used 的缩写，翻译过来就是“最近最少使用”，也就是说，LRU 缓存把最近最少使用的数据移除，让给最新读取的数据。而往往最常读取的，也是读取次数最多的。
+LinkedHashMapLinkedHashMap是继承HashMap的,它的底层数据结构也是数组与链表的结合体，即数组的元素为Entry,它与">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LRU">
+<meta property="og:url" content="http://yoursite.com/2016/12/27/LRU/index.html">
+<meta property="og:site_name" content="zhengpc">
+<meta property="og:description" content="本文介绍用LinkedHashMap作为LRU缓存LRULRU 是 Least Recently Used 的缩写，翻译过来就是“最近最少使用”，也就是说，LRU 缓存把最近最少使用的数据移除，让给最新读取的数据。而往往最常读取的，也是读取次数最多的。
+LinkedHashMapLinkedHashMap是继承HashMap的,它的底层数据结构也是数组与链表的结合体，即数组的元素为Entry,它与">
+<meta property="og:updated_time" content="2016-12-27T14:57:21.348Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LRU">
+<meta name="twitter:description" content="本文介绍用LinkedHashMap作为LRU缓存LRULRU 是 Least Recently Used 的缩写，翻译过来就是“最近最少使用”，也就是说，LRU 缓存把最近最少使用的数据移除，让给最新读取的数据。而往往最常读取的，也是读取次数最多的。
+LinkedHashMapLinkedHashMap是继承HashMap的,它的底层数据结构也是数组与链表的结合体，即数组的元素为Entry,它与">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/27/LRU/"/>
+
+
+  <title> LRU | zhengpc </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">zhengpc</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule" rel="section">
+            
+            日程
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                LRU
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-27T22:25:57+08:00" content="2016-12-27">
+              2016-12-27
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="本文介绍用LinkedHashMap作为LRU缓存"><a href="#本文介绍用LinkedHashMap作为LRU缓存" class="headerlink" title="本文介绍用LinkedHashMap作为LRU缓存"></a>本文介绍用LinkedHashMap作为LRU缓存</h2><h3 id="LRU"><a href="#LRU" class="headerlink" title="LRU"></a>LRU</h3><p>LRU 是 Least Recently Used 的缩写，翻译过来就是“最近最少使用”，也就是说，LRU 缓存把最近最少使用的数据移除，让给最新读取的数据。而往往最常读取的，也是读取次数最多的。</p>
+<h3 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h3><p>LinkedHashMap是继承HashMap的,它的底层数据结构也是数组与链表的结合体，即数组的元素为Entry<k, v="">,它与HashMap的不同之处是它的元素Entry<k, v="">中多了两个指针，即指向前一个元素的指针和指向后一个元素的指针。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">------- HashMap.Node subclass <span class="keyword">for</span> normal LinkedHashMap entries</div><div class="line">static class Entry&lt;K,V&gt; extends HashMap.Node&lt;K,V&gt; &#123;</div><div class="line">    Entry&lt;K,V&gt; before, after;</div><div class="line">    Entry(int <span class="built_in">hash</span>, K key, V value, Node&lt;K,V&gt; next) &#123;</div><div class="line">        super(<span class="built_in">hash</span>, key, value, next);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></k,></k,></p>
+<p>还有就是LinkedHashMap本色维护着链表的头指针和尾指针。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * The head (eldest) of the doubly linked list.</div><div class="line"> */</div><div class="line">transient LinkedHashMap.Entry&lt;K,V&gt; head;</div><div class="line"></div><div class="line">/**</div><div class="line"> * The tail (youngest) of the doubly linked list.</div><div class="line"> */</div><div class="line">transient LinkedHashMap.Entry&lt;K,V&gt; tail;</div></pre></td></tr></table></figure></p>
+<p>LinkedHashMap有两种遍历顺序:按插入顺序和按访问顺序。</p>
+<p>下面看缓存实现的源码:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * </div><div class="line"> * 基于LinkedHashMap的LRU缓存实现</div><div class="line"> */</div><div class="line">public class LRUCache&lt;K, V&gt; &#123;</div><div class="line">    private static final <span class="built_in">float</span> <span class="built_in">hash</span>TableLoadFactor = 0.75f;</div><div class="line">    private LinkedHashMap&lt;K, V&gt; map;</div><div class="line">    private int cacheSize;</div><div class="line"></div><div class="line">    public LRUCache(int cacheSize) &#123;</div><div class="line">        this.cacheSize = cacheSize;</div><div class="line">        int <span class="built_in">hash</span>TableCapacity = (int) Math</div><div class="line">                .ceil(cacheSize / <span class="built_in">hash</span>TableLoadFactor) + 1;</div><div class="line">        map = new LinkedHashMap&lt;K, V&gt;(<span class="built_in">hash</span>TableCapacity, <span class="built_in">hash</span>TableLoadFactor, <span class="literal">true</span>) &#123;</div><div class="line">            private static final long serialVersionUID = 1;</div><div class="line"></div><div class="line">            @Override</div><div class="line">            protected boolean removeEldestEntry(Map.Entry&lt;K, V&gt; eldest) &#123;</div><div class="line">                <span class="built_in">return</span> size() &gt; LRUCache.this.cacheSize;</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public synchronized V get(K key) &#123;</div><div class="line">        <span class="built_in">return</span> map.get(key);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public synchronized void put(K key, V value) &#123;</div><div class="line">        map.put(key, value);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public synchronized void <span class="function"><span class="title">clear</span></span>() &#123;</div><div class="line"></div><div class="line">        map.clear();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public synchronized int <span class="function"><span class="title">usedEntries</span></span>() &#123;</div><div class="line">        <span class="built_in">return</span> map.size();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public synchronized Collection&lt;Map.Entry&lt;K, V&gt;&gt; <span class="function"><span class="title">getAll</span></span>() &#123;</div><div class="line">        <span class="built_in">return</span> new ArrayList&lt;Map.Entry&lt;K, V&gt;&gt;(map.entrySet());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public synchronized Set&lt;Map.Entry&lt;K, V&gt;&gt; <span class="function"><span class="title">entrySet</span></span>() &#123;</div><div class="line">        <span class="built_in">return</span> map.entrySet();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当在put的时候缓存的size大于我们初始化输入的size的时候，就会根据我们重写的方法removeEldestEntry判断，然后移除最不常访问的。下面看测试结果:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args) &#123;</div><div class="line">        //缓存的size为5</div><div class="line">        LRUCache&lt;String, String&gt; cache = new LRUCache&lt;String, String&gt;(5);</div><div class="line"></div><div class="line">        //用于迭代用</div><div class="line">        Iterator&lt;Map.Entry&lt;String, String&gt;&gt; iterator = null;</div><div class="line">        cache.put(<span class="string">"1"</span>, <span class="string">"1"</span>);</div><div class="line">        cache.put(<span class="string">"2"</span>, <span class="string">"2"</span>);</div><div class="line">        cache.put(<span class="string">"3"</span>, <span class="string">"3"</span>);</div><div class="line">        cache.put(<span class="string">"4"</span>, <span class="string">"4"</span>);</div><div class="line">        cache.put(<span class="string">"5"</span>, <span class="string">"5"</span>);</div><div class="line"></div><div class="line">        //此时的顺序为1 2 3 4 5</div><div class="line"></div><div class="line">        iterator = cache.entrySet().iterator();</div><div class="line"></div><div class="line">        <span class="keyword">while</span> (iterator.hasNext()) &#123;</div><div class="line">            Map.Entry&lt;String, String&gt; entry = iterator.next();</div><div class="line"></div><div class="line">            System.out.println(entry.toString());</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"============="</span>);</div><div class="line"></div><div class="line">        //此时再put由于超过size了会把最先放进去的也就是最不常被使用的移除也即是把1移除</div><div class="line">        cache.put(<span class="string">"6"</span>, <span class="string">"6"</span>);</div><div class="line"></div><div class="line"></div><div class="line">        //此时的顺序为2 3 4 5 6</div><div class="line"></div><div class="line">        iterator = cache.entrySet().iterator();</div><div class="line"></div><div class="line">        <span class="keyword">while</span> (iterator.hasNext()) &#123;</div><div class="line">            Map.Entry&lt;String, String&gt; entry = iterator.next();</div><div class="line"></div><div class="line">            System.out.println(entry.toString());</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"============="</span>);</div><div class="line"></div><div class="line"></div><div class="line">        cache.get(<span class="string">"4"</span>);  //顺序2 3 5 6 4</div><div class="line">        cache.get(<span class="string">"2"</span>);  //顺序3 5 6 4 2</div><div class="line"></div><div class="line">        //此时的顺序为3 5 6 4 2</div><div class="line"></div><div class="line">        iterator = cache.entrySet().iterator();</div><div class="line"></div><div class="line">        <span class="keyword">while</span> (iterator.hasNext()) &#123;</div><div class="line">            Map.Entry&lt;String, String&gt; entry = iterator.next();</div><div class="line"></div><div class="line">            System.out.println(entry.toString());</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"============="</span>);</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">输出结果:</div><div class="line"> </div><div class="line">1=1</div><div class="line">2=2</div><div class="line">3=3</div><div class="line">4=4</div><div class="line">5=5</div><div class="line">=============</div><div class="line">2=2</div><div class="line">3=3</div><div class="line">4=4</div><div class="line">5=5</div><div class="line">6=6</div><div class="line">=============</div><div class="line">3=3</div><div class="line">5=5</div><div class="line">6=6</div><div class="line">4=4</div><div class="line">2=2</div><div class="line">=============</div></pre></td></tr></table></figure>
+<p>我现在的方法都是加了synchronized,为了提高效率我们可以用读写锁，也就是我们在读的时候可以多线程读,在写的时候就上锁。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LRU缓存/" rel="tag">#LRU缓存</a>
+          
+            <a href="/tags/LinkedHashMap/" rel="tag">#LinkedHashMap</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/15/redis3/" rel="next" title="redis事务、持久化与订阅">
+                <i class="fa fa-chevron-left"></i> redis事务、持久化与订阅
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.jpg"
+               alt="zhengpc" />
+          <p class="site-author-name" itemprop="name">zhengpc</p>
+          <p class="site-description motion-element" itemprop="description">倚天照海花无数，流水高山心自知</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/rss" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lalmeme" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/zheng-pei-chun" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#本文介绍用LinkedHashMap作为LRU缓存"><span class="nav-number">1.</span> <span class="nav-text">本文介绍用LinkedHashMap作为LRU缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LRU"><span class="nav-number">1.1.</span> <span class="nav-text">LRU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LinkedHashMap"><span class="nav-number">1.2.</span> <span class="nav-text">LinkedHashMap</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhengpc</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = false;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = decodeURIComponent(data.url);
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title >= 0 || index_content >= 0 ){
+                                isMatch = true;
+								if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            } 
+							
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

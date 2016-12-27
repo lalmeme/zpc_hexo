@@ -264,8 +264,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/04/nginx/" itemprop="url">
-                  nginx
+                <a class="post-title-link" href="/2016/11/13/hello-world/" itemprop="url">
+                  Bibucketd
                 </a>
               
             
@@ -278,8 +278,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-04T22:24:47+08:00" content="2016-11-04">
-              2016-11-04
+            <time itemprop="dateCreated" datetime="2016-11-13T00:02:14+08:00" content="2016-11-13">
+              2016-11-13
             </time>
           </span>
 
@@ -308,16 +308,9 @@
       
         
           
-            <p>一篇关于安装启动nginx的文章</p>
-<h2 id="安装nginx"><a href="#安装nginx" class="headerlink" title="安装nginx"></a>安装nginx</h2><h3 id="unbantu安装nginx"><a href="#unbantu安装nginx" class="headerlink" title="unbantu安装nginx"></a>unbantu安装nginx</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ apt-get install nginx</div></pre></td></tr></table></figure>
-<h3 id="mac下安装nginx"><a href="#mac下安装nginx" class="headerlink" title="mac下安装nginx"></a>mac下安装nginx</h3><p>我是安装homebrew后用改工具安装的，下面是mac如何安装homebrew<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ /usr/bin/ruby <span class="_">-e</span> </div><div class="line"><span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)</span>"</span></div></pre></td></tr></table></figure></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ sudo brew install wget   -----安装软件</div><div class="line"></div><div class="line">$ sudo brew uninstall wget   ------卸载软件</div><div class="line"></div><div class="line">$ sudo brew search /apache*/   ------查看软件, /apache*/用的是正则表达式,用/分割</div></pre></td></tr></table></figure>
-<p>更多关于homebrew请访问: <a href="http://brew.sh/" target="_blank" rel="external">Homebrew</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ brew install nginx      ----安装nginx</div></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo nginx     -----开启nginx</div></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nginx <span class="_">-s</span> reload|reopen|stop|quit</div></pre></td></tr></table></figure>
-<p>重新加载配置|重启|停止|退出 nginx</p>
-<p>也可以通过手动配置nginx环境变量安装ngixn,这边不做详述</p>
+            <h2 id="Set-up-local-directory"><a href="#Set-up-local-directory" class="headerlink" title="Set up local directory"></a>Set up local directory</h2><p>Set up Git on your machine if you haven’t already.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ mkdir /path/to/your/project</div><div class="line">$ <span class="built_in">cd</span> /path/to/your/project</div><div class="line">$ git init</div><div class="line">$ git remote add origin </div><div class="line">  https://[xxx]@bitbucket.org/[xxx]/manager.git</div></pre></td></tr></table></figure></p>
+<p>Create your first file, commit, and push</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">echo</span> <span class="string">"[xxx]"</span> &gt;&gt; contributors.txt</div><div class="line">$ git add contributors.txt</div><div class="line">$ git commit -m <span class="string">"Initial commit with contributors"</span></div><div class="line">$ git push -u origin master</div></pre></td></tr></table></figure>
 
           
         
@@ -350,7 +343,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -391,7 +384,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-count">15</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -401,7 +394,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

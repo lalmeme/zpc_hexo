@@ -264,8 +264,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/13/hello-world/" itemprop="url">
-                  Bibucketd
+                <a class="post-title-link" href="/2016/11/18/single/" itemprop="url">
+                  single
                 </a>
               
             
@@ -278,8 +278,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-13T00:02:14+08:00" content="2016-11-13">
-              2016-11-13
+            <time itemprop="dateCreated" datetime="2016-11-18T20:24:10+08:00" content="2016-11-18">
+              2016-11-18
             </time>
           </span>
 
@@ -308,9 +308,14 @@
       
         
           
-            <h2 id="Set-up-local-directory"><a href="#Set-up-local-directory" class="headerlink" title="Set up local directory"></a>Set up local directory</h2><p>Set up Git on your machine if you haven’t already.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ mkdir /path/to/your/project</div><div class="line">$ <span class="built_in">cd</span> /path/to/your/project</div><div class="line">$ git init</div><div class="line">$ git remote add origin </div><div class="line">  https://[xxx]@bitbucket.org/[xxx]/manager.git</div></pre></td></tr></table></figure></p>
-<p>Create your first file, commit, and push</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">echo</span> <span class="string">"[xxx]"</span> &gt;&gt; contributors.txt</div><div class="line">$ git add contributors.txt</div><div class="line">$ git commit -m <span class="string">"Initial commit with contributors"</span></div><div class="line">$ git push -u origin master</div></pre></td></tr></table></figure>
+            <h2 id="最近看到很多写单例模式的地方，感觉都有点问题，下面来简单讲述一下java单例模式的集中写法。"><a href="#最近看到很多写单例模式的地方，感觉都有点问题，下面来简单讲述一下java单例模式的集中写法。" class="headerlink" title="最近看到很多写单例模式的地方，感觉都有点问题，下面来简单讲述一下java单例模式的集中写法。"></a>最近看到很多写单例模式的地方，感觉都有点问题，下面来简单讲述一下java单例模式的集中写法。</h2><h3 id="一般的写法"><a href="#一般的写法" class="headerlink" title="一般的写法"></a>一般的写法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ public class Single &#123;</div><div class="line">$   public static Single single;</div><div class="line">$   private <span class="function"><span class="title">Single</span></span>()&#123;&#125;</div><div class="line">$   public static Single <span class="function"><span class="title">getInstance</span></span>() &#123;</div><div class="line">$   <span class="keyword">if</span>(null == single) &#123;</div><div class="line">$     single = new Single();</div><div class="line">$     &#125;</div><div class="line">$     <span class="built_in">return</span> single;</div><div class="line">$   &#125;</div><div class="line">$ &#125;</div></pre></td></tr></table></figure>
+<p>深入思考就会发现这么写存在问题，它不是线程安全的(多个线程会同时运行到该代码，且每次得到的结果不是都是一样的)。为什么这么说，因为这段代码被两个线程同时运行，会new出两个对象来。</p>
+<h3 id="修改方案一"><a href="#修改方案一" class="headerlink" title="修改方案一"></a>修改方案一</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ public class Single &#123;</div><div class="line">$   public static Single single;</div><div class="line">$   private <span class="function"><span class="title">Single</span></span>()&#123;&#125;    //私有的构造方法</div><div class="line">$   public static sychronized Single <span class="function"><span class="title">getInstance</span></span>() &#123;</div><div class="line">$     <span class="keyword">if</span>(null == single) &#123;</div><div class="line">$       single = new Single();</div><div class="line">$     &#125;</div><div class="line">$     reurn single;</div><div class="line">$   &#125;</div><div class="line">$ &#125;</div></pre></td></tr></table></figure>
+<p>解决多线程同步问题，但是降低性能。</p>
+<h3 id="修改方案二"><a href="#修改方案二" class="headerlink" title="修改方案二"></a>修改方案二</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">$ public class Single &#123;</div><div class="line">$   public volatile static Single single;</div><div class="line">$   private <span class="function"><span class="title">Single</span></span>() &#123;&#125;</div><div class="line">$   public static Single <span class="function"><span class="title">getInstance</span></span>() &#123;</div><div class="line">$     <span class="keyword">if</span>(null == single) &#123;</div><div class="line">$       synchronized(Single.class) &#123;</div><div class="line">$       <span class="keyword">if</span>(null == single) &#123;</div><div class="line">$         single = new Single();</div><div class="line">$       &#125;</div><div class="line">$     &#125;</div><div class="line">$   &#125;</div><div class="line">$   <span class="built_in">return</span> single;</div><div class="line">$   &#125;</div><div class="line">$  &#125;</div></pre></td></tr></table></figure>
+<p>双重检查锁定</p>
+<h3 id="修改方案三"><a href="#修改方案三" class="headerlink" title="修改方案三"></a>修改方案三</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public Enum Single &#123;</div><div class="line">  INSTANCE;</div><div class="line">  public void <span class="function"><span class="title">methodA</span></span>()&#123;&#125;</div><div class="line"> &#125;</div><div class="line">``` </div><div class="line"></div><div class="line">这种方法的用法就是Single.INSTANCE.methodA()。因为枚举类型本身就是线程安全的。还能防止反序列化重新创建新的对象。推荐使用枚举类型。</div><div class="line"></div><div class="line"><span class="comment">### 修改方案四</span></div><div class="line"></div><div class="line">``` bash</div><div class="line">public class Single &#123;</div><div class="line">    private static class InnerSingle &#123;</div><div class="line">        private static Single innerSingle = new Single();</div><div class="line">    &#125;</div><div class="line">    public static Single <span class="function"><span class="title">getSingle</span></span>() &#123;</div><div class="line">        <span class="built_in">return</span> InnerSingle.innerSingle;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>静态内部类只会被实例化一次。</p>
 
           
         
@@ -343,7 +348,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -384,7 +389,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-count">15</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -394,7 +399,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

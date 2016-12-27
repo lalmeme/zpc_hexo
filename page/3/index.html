@@ -264,8 +264,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/12/redis/" itemprop="url">
-                  redis
+                <a class="post-title-link" href="/2016/12/14/redis2/" itemprop="url">
+                  redis主从复制与哨兵
                 </a>
               
             
@@ -278,8 +278,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-12T21:08:20+08:00" content="2016-12-12">
-              2016-12-12
+            <time itemprop="dateCreated" datetime="2016-12-14T22:52:34+08:00" content="2016-12-14">
+              2016-12-14
             </time>
           </span>
 
@@ -308,22 +308,15 @@
       
         
           
-            <h2 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h2><h3 id="redis的安装-linux环境"><a href="#redis的安装-linux环境" class="headerlink" title="redis的安装(linux环境)"></a>redis的安装(linux环境)</h3><p>1 首先需要安装gcc，把下载好的redis-3.0.0-rc2.tar.gz 放到linux /usr/local文件夹下</p>
-<p>2 进行解压 tar -zxvf redis-3.0.0-rc2.tar.gz</p>
-<p>3 进入到redis-3.0.0目录下，进行编译 make</p>
-<p>4 进入到src下进行安装 make install  验证(ll查看src下的目录，有redis-server 、redis-cil即可)</p>
-<p>5 建立俩个文件夹存放redis命令和配置文件</p>
-<p>mkdir -p /usr/local/redis/etc</p>
-<p>mkdir -p /usr/local/redis/bin</p>
-<p>6 把redis-3.0.0下的redis.conf 移动到/usr/local/redis/etc下，</p>
-<p>   cp redis.conf /usr/local/redis/etc/</p>
-<p>7 把redis-3.0.0/src里的mkreleasehdr.sh、redis-benchmark、redis-check-aof、redis-check-dump、redis-cli、redis-server<br>文件移动到bin下，命令：</p>
-<p>mv mkreleasehdr.sh redis-benchmark redis-check-aof redis-check-dump redis-cli redis-server /usr/local/redis/bin</p>
-<p>8 启动时并指定配置文件：./redis-server /usr/local/redis/etc/redis.conf（注意要使用后台启动，所以修改redis.conf里的 daemonize 改为yes)</p>
-<p>9 验证启动是否成功：<br>ps -ef | grep redis 查看是否有redis服务 或者 查看端口：netstat -tunpl | grep 6379</p>
-<p>进入redis客户端 ./redis-cli 退出客户端quit<br>退出redis服务：<br>（1）pkill redis-server 、<br>（2）kill 进程号、</p>
-<p>（3）/usr/local/redis/bin/redis-cli shutdown</p>
-<h3 id="redis的简单命令"><a href="#redis的简单命令" class="headerlink" title="redis的简单命令"></a>redis的简单命令</h3><p>``` bash<br>set key value  设置键值<br>get key 根据key得到value<br>keys * 查看所有key<br>del key 删除key</p>
+            <h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><p>主从复制很简单，只需要在从节点的redis.conf配置文件中修改就行了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">slaveof &lt;masterip&gt; &lt;masterport&gt;</div><div class="line">  </div><div class="line">masterip为主节点ip masterpost为直接点端口</div><div class="line"></div><div class="line">如果主节点配置了requirepass(需要登录密码)</div><div class="line">那么在主从复制的时候就需要再配置一项</div><div class="line"></div><div class="line">masterauth &lt;master-password&gt;</div><div class="line"></div><div class="line">master-password就是主节点的登陆密码</div></pre></td></tr></table></figure>
+<p>都配置完成后把主节点和从节点的redis服务开启就行了。</p>
+<h2 id="哨兵"><a href="#哨兵" class="headerlink" title="哨兵"></a>哨兵</h2><p>概念：有三台机器，其中一台为主节点，其余两台为从节点，当主节点挂了的时候，哨兵需要做的就是在剩余的两台从节点中选举出一个当主节点。</p>
+<p>配置哨兵需要修改sentinel.conf，看一下配置文件都有哪些东西</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">port 26379    哨兵服务的端口号为26379</div><div class="line"></div><div class="line">dir /tmp      日志文件的目录</div><div class="line"></div><div class="line">sentinel monitor mymaster 127.0.0.1 6379 2 </div><div class="line">mymaster:自定义的名字 主节点的ip，端口, 2表示主节点挂了的时候,</div><div class="line">当有两台机器投票某台机器的时候就将该服务器变成主节点。</div><div class="line"></div><div class="line">sentinel auth-pass &lt;master-name&gt; &lt;password&gt; </div><div class="line">当主节点需要密码的时候配置，一般主节点不需要密码，一般都是内网访问。</div><div class="line"></div><div class="line">sentinel down-after-milliseconds mymaster 30000</div><div class="line">哨兵默认1秒检测主节点，如果30秒还没检测到就表示主节点挂了。</div><div class="line"></div><div class="line">sentinel parallel-syncs mymaster 1</div><div class="line">从节点的数量</div><div class="line"></div><div class="line">sentinel failover-timeout mymaster 180000</div><div class="line">若sentinel在该配置值内未能完成failover操作（即故障时master/slave自动切换），则认为本次failover失败。</div></pre></td></tr></table></figure>
+<p>启动哨兵</p>
+<p>/usr/local/redis/bin/redis-server /usr/local/redis/etc/sentinel.conf –sentinel &amp; </p>
+<p>表示后台启动哨兵</p>
 
           
         
@@ -356,7 +349,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -397,7 +390,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-count">15</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -407,7 +400,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

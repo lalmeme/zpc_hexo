@@ -264,8 +264,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/23/hashset/" itemprop="url">
-                  hashset
+                <a class="post-title-link" href="/2016/12/12/redis/" itemprop="url">
+                  redis
                 </a>
               
             
@@ -278,8 +278,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-23T22:03:54+08:00" content="2016-11-23">
-              2016-11-23
+            <time itemprop="dateCreated" datetime="2016-12-12T21:08:20+08:00" content="2016-12-12">
+              2016-12-12
             </time>
           </span>
 
@@ -308,20 +308,22 @@
       
         
           
-            <p>对于 HashSet 而言，它是基于 HashMap 实现的，底层采用 HashMap 来保存元素，所以如果对 HashMap 比较熟悉了，那么学习 HashSet 也是很轻松的。</p>
-<p>我们先通过 HashSet 最简单的构造函数和几个成员变量来看一下，证明咱们上边说的，其底层是 HashMap：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">private transient HashMap&lt;E,Object&gt; map;</div><div class="line"></div><div class="line">// Dummy value to associate with an Object <span class="keyword">in</span> the backing Map</div><div class="line">private static final Object PRESENT = new Object();</div><div class="line"></div><div class="line">/**</div><div class="line"> * Constructs a new, empty <span class="built_in">set</span>; the backing &lt;tt&gt;HashMap&lt;/tt&gt; instance has</div><div class="line"> * default initial capacity (16) and load factor (0.75).</div><div class="line"> */</div><div class="line">public <span class="function"><span class="title">HashSet</span></span>() &#123;</div><div class="line">    map = new HashMap&lt;&gt;();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>其实在英文注释中已经说的比较明确了。首先有一个HashMap的成员变量，我们在 HashSet 的构造函数中将其初始化，默认情况下采用的是 initial capacity为16，load factor 为 0.75。</p>
-<p>HashSet 的实现<br>对于 HashSet 而言，它是基于 HashMap 实现的，HashSet 底层使用 HashMap 来保存所有元素，因此 HashSet 的实现比较简单，相关 HashSet 的操作，基本上都是直接调用底层 HashMap 的相关方法来完成，我们应该为保存到 HashSet 中的对象覆盖 hashCode() 和 equals()</p>
-<p>构造方法</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 默认的无参构造器，构造一个空的HashSet。</div><div class="line"> *</div><div class="line"> * 实际底层会初始化一个空的HashMap，并使用默认初始容量为16和加载因子0.75。</div><div class="line"> */</div><div class="line">public <span class="function"><span class="title">HashSet</span></span>() &#123;</div><div class="line">    map = new HashMap&lt;E,Object&gt;();</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 构造一个包含指定collection中的元素的新<span class="built_in">set</span>。</div><div class="line"> *</div><div class="line"> * 实际底层使用默认的加载因子0.75和足以包含指定collection中所有元素的初始容量来创建一个HashMap。</div><div class="line"> * @param c 其中的元素将存放在此<span class="built_in">set</span>中的collection。</div><div class="line"> */</div><div class="line">public HashSet(Collection&lt;? extends E&gt; c) &#123;</div><div class="line">    map = new HashMap&lt;E,Object&gt;(Math.max((int) (c.size()/.75f) + 1, 16));</div><div class="line">    addAll(c);</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 以指定的initialCapacity和loadFactor构造一个空的HashSet。</div><div class="line"> *</div><div class="line"> * 实际底层以相应的参数构造一个空的HashMap。</div><div class="line"> * @param initialCapacity 初始容量。</div><div class="line"> * @param loadFactor 加载因子。</div><div class="line"> */</div><div class="line">public HashSet(int initialCapacity, <span class="built_in">float</span> loadFactor) &#123;</div><div class="line">    map = new HashMap&lt;E,Object&gt;(initialCapacity, loadFactor);</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 以指定的initialCapacity构造一个空的HashSet。</div><div class="line"> *</div><div class="line"> * 实际底层以相应的参数及加载因子loadFactor为0.75构造一个空的HashMap。</div><div class="line"> * @param initialCapacity 初始容量。</div><div class="line"> */</div><div class="line">public HashSet(int initialCapacity) &#123;</div><div class="line">    map = new HashMap&lt;E,Object&gt;(initialCapacity);</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 以指定的initialCapacity和loadFactor构造一个新的空链接哈希集合。此构造函数为包访问权限，不对外公开，</div><div class="line"> * 实际只是是对LinkedHashSet的支持。</div><div class="line"> *</div><div class="line"> * 实际底层会以指定的参数构造一个空LinkedHashMap实例来实现。</div><div class="line"> * @param initialCapacity 初始容量。</div><div class="line"> * @param loadFactor 加载因子。</div><div class="line"> * @param dummy 标记。</div><div class="line"> */</div><div class="line">HashSet(int initialCapacity, <span class="built_in">float</span> loadFactor, boolean dummy) &#123;</div><div class="line">    map = new LinkedHashMap&lt;E,Object&gt;(initialCapacity, loadFactor);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>add 方法</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * @param e 将添加到此<span class="built_in">set</span>中的元素。</div><div class="line"> * @<span class="built_in">return</span> 如果此<span class="built_in">set</span>尚未包含指定元素，则返回<span class="literal">true</span>。</div><div class="line"> */</div><div class="line">public boolean add(E e) &#123;</div><div class="line">    <span class="built_in">return</span> map.put(e, PRESENT)==null;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>如果此 set 中尚未包含指定元素，则添加指定元素。更确切地讲，如果此 set 没有包含满足(e==null ? e2==null : e.equals(e2)) 的元素 e2，则向此 set 添加指定的元素 e。如果此 set 已包含该元素，则该调用不更改 set 并返回 false。但底层实际将将该元素作为 key 放入 HashMap。思考一下为什么？</p>
-<p>由于 HashMap 的 put() 方法添加 key-value 对时，当新放入 HashMap 的 Entry 中 key 与集合中原有 Entry 的 key 相同（hashCode()返回值相等，通过 equals 比较也返回 true），新添加的 Entry 的 value 会将覆盖原来 Entry 的 value（HashSet 中的 value 都是PRESENT），但 key 不会有任何改变，因此如果向 HashSet 中添加一个已经存在的元素时，新添加的集合元素将不会被放入 HashMap中，原来的元素也不会有任何改变，这也就满足了 Set 中元素不重复的特性。</p>
-<p>该方法如果添加的是在 HashSet 中不存在的，则返回 true；如果添加的元素已经存在，返回 false。其原因在于我们之前提到的关于 HashMap 的 put 方法。该方法在添加 key 不重复的键值对的时候，会返回 null。</p>
-<p>其余方法</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">    /**</div><div class="line">     * 如果此<span class="built_in">set</span>包含指定元素，则返回<span class="literal">true</span>。</div><div class="line">     * 更确切地讲，当且仅当此<span class="built_in">set</span>包含一个满足(o==null ? e==null : o.equals(e))的e元素时，返回<span class="literal">true</span>。</div><div class="line">     *</div><div class="line">     * 底层实际调用HashMap的containsKey判断是否包含指定key。</div><div class="line">     * @param o 在此<span class="built_in">set</span>中的存在已得到测试的元素。</div><div class="line">     * @<span class="built_in">return</span> 如果此<span class="built_in">set</span>包含指定元素，则返回<span class="literal">true</span>。</div><div class="line">     */</div><div class="line">    public boolean contains(Object o) &#123;</div><div class="line">    <span class="built_in">return</span> map.containsKey(o);</div><div class="line">    &#125;</div><div class="line">    /**</div><div class="line">     * 如果指定元素存在于此<span class="built_in">set</span>中，则将其移除。更确切地讲，如果此<span class="built_in">set</span>包含一个满足(o==null ? e==null : o.equals(e))的元素e，</div><div class="line">     * 则将其移除。如果此<span class="built_in">set</span>已包含该元素，则返回<span class="literal">true</span></div><div class="line">     *</div><div class="line">     * 底层实际调用HashMap的remove方法删除指定Entry。</div><div class="line">     * @param o 如果存在于此<span class="built_in">set</span>中则需要将其移除的对象。</div><div class="line">     * @<span class="built_in">return</span> 如果<span class="built_in">set</span>包含指定元素，则返回<span class="literal">true</span>。</div><div class="line">     */</div><div class="line">    public boolean remove(Object o) &#123;</div><div class="line">    <span class="built_in">return</span> map.remove(o)==PRESENT;</div><div class="line">    &#125;</div><div class="line">    /**</div><div class="line">     * 返回此HashSet实例的浅表副本：并没有复制这些元素本身。</div><div class="line">     *</div><div class="line">     * 底层实际调用HashMap的<span class="built_in">clone</span>()方法，获取HashMap的浅表副本，并设置到HashSet中。</div><div class="line">     */</div><div class="line">    public Object <span class="function"><span class="title">clone</span></span>() &#123;</div><div class="line">        try &#123;</div><div class="line">            HashSet&lt;E&gt; newSet = (HashSet&lt;E&gt;) super.clone();</div><div class="line">            newSet.map = (HashMap&lt;E, Object&gt;) map.clone();</div><div class="line">            <span class="built_in">return</span> newSet;</div><div class="line">        &#125; catch (CloneNotSupportedException e) &#123;</div><div class="line">            throw new InternalError();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+            <h2 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h2><h3 id="redis的安装-linux环境"><a href="#redis的安装-linux环境" class="headerlink" title="redis的安装(linux环境)"></a>redis的安装(linux环境)</h3><p>1 首先需要安装gcc，把下载好的redis-3.0.0-rc2.tar.gz 放到linux /usr/local文件夹下</p>
+<p>2 进行解压 tar -zxvf redis-3.0.0-rc2.tar.gz</p>
+<p>3 进入到redis-3.0.0目录下，进行编译 make</p>
+<p>4 进入到src下进行安装 make install  验证(ll查看src下的目录，有redis-server 、redis-cil即可)</p>
+<p>5 建立俩个文件夹存放redis命令和配置文件</p>
+<p>mkdir -p /usr/local/redis/etc</p>
+<p>mkdir -p /usr/local/redis/bin</p>
+<p>6 把redis-3.0.0下的redis.conf 移动到/usr/local/redis/etc下，</p>
+<p>   cp redis.conf /usr/local/redis/etc/</p>
+<p>7 把redis-3.0.0/src里的mkreleasehdr.sh、redis-benchmark、redis-check-aof、redis-check-dump、redis-cli、redis-server<br>文件移动到bin下，命令：</p>
+<p>mv mkreleasehdr.sh redis-benchmark redis-check-aof redis-check-dump redis-cli redis-server /usr/local/redis/bin</p>
+<p>8 启动时并指定配置文件：./redis-server /usr/local/redis/etc/redis.conf（注意要使用后台启动，所以修改redis.conf里的 daemonize 改为yes)</p>
+<p>9 验证启动是否成功：<br>ps -ef | grep redis 查看是否有redis服务 或者 查看端口：netstat -tunpl | grep 6379</p>
+<p>进入redis客户端 ./redis-cli 退出客户端quit<br>退出redis服务：<br>（1）pkill redis-server 、<br>（2）kill 进程号、</p>
+<p>（3）/usr/local/redis/bin/redis-cli shutdown</p>
+<h3 id="redis的简单命令"><a href="#redis的简单命令" class="headerlink" title="redis的简单命令"></a>redis的简单命令</h3><p>``` bash<br>set key value  设置键值<br>get key 根据key得到value<br>keys * 查看所有key<br>del key 删除key</p>
 
           
         
@@ -354,7 +356,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -395,7 +397,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-count">15</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -405,7 +407,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
