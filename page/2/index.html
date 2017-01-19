@@ -264,8 +264,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/15/redis3/" itemprop="url">
-                  redis事务、持久化与订阅
+                <a class="post-title-link" href="/2017/01/18/自己实现hashmap/" itemprop="url">
+                  自己实现hashmap
                 </a>
               
             
@@ -278,8 +278,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-12-15T23:36:12+08:00" content="2016-12-15">
-              2016-12-15
+            <time itemprop="dateCreated" datetime="2017-01-18T23:12:26+08:00" content="2017-01-18">
+              2017-01-18
             </time>
           </span>
 
@@ -308,15 +308,8 @@
       
         
           
-            <h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><p>redis的事务很简单，基本不用，因为它没有回滚。<br>例子1：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">multi  事务开始</div><div class="line"><span class="built_in">set</span> a 1</div><div class="line"><span class="built_in">set</span> b 2</div><div class="line"><span class="built_in">set</span> c 3</div><div class="line"><span class="built_in">exec</span>   执行事务</div></pre></td></tr></table></figure></p>
-<p>结果:<br><img src="/hexo/source/uploads/multi1.png" alt=""></p>
-<p>例子2：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">multi</div><div class="line"><span class="built_in">set</span> name z3</div><div class="line"><span class="built_in">set</span> age 44</div><div class="line"><span class="built_in">set</span> sex w</div><div class="line">incr name </div><div class="line"><span class="built_in">exec</span></div></pre></td></tr></table></figure></p>
-<p>结果:<br><img src="file:///hexo/source/uploads/multi2.png" alt=""><br>可以看出虽然最后一步出错了，但是上面的三步都执行且出错后没有回滚。</p>
-<h3 id="订阅与发布"><a href="#订阅与发布" class="headerlink" title="订阅与发布"></a>订阅与发布</h3><p>看例子：<br><img src="file:///hexo/source/uploads/publish.png" alt=""></p>
-<h3 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h3><p>数据肯定得做持久化.<br>redis默认的是rdb，在redis.conf配置项是:dbfilename dump.rdb。<br>它的机制是在多少时间段内有多少key改变了就存到磁盘一下。<br>可以通过snapshotting设置：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">save 900 1:900秒有一个key变化就存一下</div><div class="line">save 300 10:300秒有10个key变化就存一下</div><div class="line">save 60 10000:60秒内有10000个key变化就存一下</div></pre></td></tr></table></figure>
-<p>不过这个机制不实时，容易丢失数据。而且在真实环境中一般用第二种机制aof，类似于oracle的日志。<br>它的意思是redis将没收到的写命令都通过write函数追加到命令中，当redis重新启动时会重新执行文件中保存的写命令来在内存中重建这个数据库的内容。</p>
-<p>通过redis.conf配置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">appendonly yes   开启aof持久化方式</div><div class="line">appendfsync always   收到命令就立即写入磁盘，效率慢，保证完全持久化</div><div class="line">appendfsync everysec  每秒写入磁盘</div><div class="line">appendfsynv no   完全依赖os</div></pre></td></tr></table></figure></p>
+            <h1 id="下面是我手动实现的一点缩减版的hashmap"><a href="#下面是我手动实现的一点缩减版的hashmap" class="headerlink" title="下面是我手动实现的一点缩减版的hashmap"></a>下面是我手动实现的一点缩减版的hashmap</h1><p>直接上代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 手写缩减版的hashmap</div><div class="line"> * Created by zpc on 17/1/18.</div><div class="line"> */</div><div class="line">public interface Map&lt;K, V&gt; &#123;</div><div class="line"></div><div class="line">    V put(K key, V value);</div><div class="line"></div><div class="line">    Entry&lt;K, V&gt; get(K key);</div><div class="line"></div><div class="line">    int size();</div><div class="line"></div><div class="line">    interface Entry&lt;K, V&gt; &#123;</div><div class="line">        K getKey();</div><div class="line"></div><div class="line">        V getValue();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div></pre></td><td class="code"><pre><div class="line">**</div><div class="line"> * hashmap的具体实现</div><div class="line"> * hashmap的数据结构，数组与链表的结合体</div><div class="line"> * 根据哈希算法得到key的hashcode，然后通过除留余数法得到对应的数组的下标</div><div class="line"> * 位置上没有元素时，new Entry(),存在元素将新的元素放在链表的头，下一个元素指向原来的头</div><div class="line"> * Created by zpc on 17/1/18.</div><div class="line"> */</div><div class="line">public class MyHashMap&lt;K, V&gt; implements Map&lt;K, V&gt;&#123;</div><div class="line">    //数组默认的长度为16</div><div class="line">    private static int defaultLength = 16;</div><div class="line"></div><div class="line">    /*</div><div class="line">      负载因子越大，数组装的越满，越容易产生碰撞,查询慢</div><div class="line">      越小，元素越分散，空间利用率越低 默认为0.75f</div><div class="line">      在MyHashMap中没有具体用处</div><div class="line">     */</div><div class="line">    private static <span class="built_in">float</span> defaultLoad = 0.75f;</div><div class="line"></div><div class="line">    //数组元素的个数</div><div class="line">    int size;</div><div class="line"></div><div class="line">    //数组</div><div class="line">    Entry&lt;K, V&gt;[] table;</div><div class="line"></div><div class="line">    public <span class="function"><span class="title">MyHashMap</span></span>() &#123;</div><div class="line">        this(defaultLength, defaultLoad);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public MyHashMap(int defaultLength, <span class="built_in">float</span> defaultLoad) &#123;</div><div class="line">        this.defaultLength = defaultLength;</div><div class="line">        this.defaultLoad = defaultLoad;</div><div class="line"></div><div class="line">        table = new Entry[defaultLength];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public V put(K key, V value) &#123;</div><div class="line">        <span class="keyword">if</span>(null  == key) &#123;</div><div class="line">            //key是null就放在数组的第0个位置</div><div class="line">            Entry e = table[0];</div><div class="line">            <span class="keyword">if</span>(e == null) &#123;</div><div class="line">                Entry&lt;K, V&gt; entry = new Entry&lt;K, V&gt;(key, value, null, 0);</div><div class="line">                table[0] = entry;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        int index = key.hashCode() &amp; (this.defaultLength - 1);</div><div class="line">        Entry e = table[index];</div><div class="line">        <span class="keyword">if</span>(null == e) &#123;</div><div class="line">            table[index] = new Entry&lt;K, V&gt;(key, value, null, index);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        table[index] = new Entry&lt;K, V&gt;(key, value, e, index);</div><div class="line"></div><div class="line">        <span class="built_in">return</span> null;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public Entry&lt;K, V&gt; get(K key) &#123;</div><div class="line">        int index = key.hashCode() &amp; (this.defaultLength - 1);</div><div class="line">        Entry e = table[index];</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (; e != null; e = e.next) &#123;</div><div class="line">            Object k;</div><div class="line">            <span class="keyword">if</span>(e.index == index &amp;&amp; (k = e.key) == key) &#123;</div><div class="line">                <span class="built_in">return</span> e;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="built_in">return</span> null;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public int <span class="function"><span class="title">size</span></span>() &#123;</div><div class="line">        <span class="built_in">return</span> size;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    class Entry&lt;K, V&gt; implements Map.Entry&lt;K, V&gt; &#123;</div><div class="line">        K key;</div><div class="line"></div><div class="line">        V value;</div><div class="line"></div><div class="line">        Entry&lt;K, V&gt; next; //指向下一个元素</div><div class="line"></div><div class="line">        int index; //数组的位置</div><div class="line"></div><div class="line">        Entry(K key, V value, Entry&lt;K, V&gt; next, int index) &#123;</div><div class="line">            this.key = key;</div><div class="line">            this.value = value;</div><div class="line">            this.next = next;</div><div class="line">            this.index = index;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public K <span class="function"><span class="title">getKey</span></span>() &#123;</div><div class="line">            <span class="built_in">return</span> key;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public V <span class="function"><span class="title">getValue</span></span>() &#123;</div><div class="line">            <span class="built_in">return</span> value;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
           
         
@@ -349,7 +342,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -390,7 +383,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-count">19</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -400,7 +393,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">28</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -464,7 +457,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

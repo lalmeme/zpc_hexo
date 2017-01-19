@@ -264,8 +264,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/18/single/" itemprop="url">
-                  single
+                <a class="post-title-link" href="/2016/12/07/jvm/" itemprop="url">
+                  jvm
                 </a>
               
             
@@ -278,8 +278,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-18T20:24:10+08:00" content="2016-11-18">
-              2016-11-18
+            <time itemprop="dateCreated" datetime="2016-12-07T21:32:24+08:00" content="2016-12-07">
+              2016-12-07
             </time>
           </span>
 
@@ -308,14 +308,15 @@
       
         
           
-            <h2 id="最近看到很多写单例模式的地方，感觉都有点问题，下面来简单讲述一下java单例模式的集中写法。"><a href="#最近看到很多写单例模式的地方，感觉都有点问题，下面来简单讲述一下java单例模式的集中写法。" class="headerlink" title="最近看到很多写单例模式的地方，感觉都有点问题，下面来简单讲述一下java单例模式的集中写法。"></a>最近看到很多写单例模式的地方，感觉都有点问题，下面来简单讲述一下java单例模式的集中写法。</h2><h3 id="一般的写法"><a href="#一般的写法" class="headerlink" title="一般的写法"></a>一般的写法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ public class Single &#123;</div><div class="line">$   public static Single single;</div><div class="line">$   private <span class="function"><span class="title">Single</span></span>()&#123;&#125;</div><div class="line">$   public static Single <span class="function"><span class="title">getInstance</span></span>() &#123;</div><div class="line">$   <span class="keyword">if</span>(null == single) &#123;</div><div class="line">$     single = new Single();</div><div class="line">$     &#125;</div><div class="line">$     <span class="built_in">return</span> single;</div><div class="line">$   &#125;</div><div class="line">$ &#125;</div></pre></td></tr></table></figure>
-<p>深入思考就会发现这么写存在问题，它不是线程安全的(多个线程会同时运行到该代码，且每次得到的结果不是都是一样的)。为什么这么说，因为这段代码被两个线程同时运行，会new出两个对象来。</p>
-<h3 id="修改方案一"><a href="#修改方案一" class="headerlink" title="修改方案一"></a>修改方案一</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ public class Single &#123;</div><div class="line">$   public static Single single;</div><div class="line">$   private <span class="function"><span class="title">Single</span></span>()&#123;&#125;    //私有的构造方法</div><div class="line">$   public static sychronized Single <span class="function"><span class="title">getInstance</span></span>() &#123;</div><div class="line">$     <span class="keyword">if</span>(null == single) &#123;</div><div class="line">$       single = new Single();</div><div class="line">$     &#125;</div><div class="line">$     reurn single;</div><div class="line">$   &#125;</div><div class="line">$ &#125;</div></pre></td></tr></table></figure>
-<p>解决多线程同步问题，但是降低性能。</p>
-<h3 id="修改方案二"><a href="#修改方案二" class="headerlink" title="修改方案二"></a>修改方案二</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">$ public class Single &#123;</div><div class="line">$   public volatile static Single single;</div><div class="line">$   private <span class="function"><span class="title">Single</span></span>() &#123;&#125;</div><div class="line">$   public static Single <span class="function"><span class="title">getInstance</span></span>() &#123;</div><div class="line">$     <span class="keyword">if</span>(null == single) &#123;</div><div class="line">$       synchronized(Single.class) &#123;</div><div class="line">$       <span class="keyword">if</span>(null == single) &#123;</div><div class="line">$         single = new Single();</div><div class="line">$       &#125;</div><div class="line">$     &#125;</div><div class="line">$   &#125;</div><div class="line">$   <span class="built_in">return</span> single;</div><div class="line">$   &#125;</div><div class="line">$  &#125;</div></pre></td></tr></table></figure>
-<p>双重检查锁定</p>
-<h3 id="修改方案三"><a href="#修改方案三" class="headerlink" title="修改方案三"></a>修改方案三</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public Enum Single &#123;</div><div class="line">  INSTANCE;</div><div class="line">  public void <span class="function"><span class="title">methodA</span></span>()&#123;&#125;</div><div class="line"> &#125;</div><div class="line">``` </div><div class="line"></div><div class="line">这种方法的用法就是Single.INSTANCE.methodA()。因为枚举类型本身就是线程安全的。还能防止反序列化重新创建新的对象。推荐使用枚举类型。</div><div class="line"></div><div class="line"><span class="comment">### 修改方案四</span></div><div class="line"></div><div class="line">``` bash</div><div class="line">public class Single &#123;</div><div class="line">    private static class InnerSingle &#123;</div><div class="line">        private static Single innerSingle = new Single();</div><div class="line">    &#125;</div><div class="line">    public static Single <span class="function"><span class="title">getSingle</span></span>() &#123;</div><div class="line">        <span class="built_in">return</span> InnerSingle.innerSingle;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>静态内部类只会被实例化一次。</p>
+            <h2 id="jvm组成"><a href="#jvm组成" class="headerlink" title="jvm组成"></a>jvm组成</h2><h3 id="类加载子系统"><a href="#类加载子系统" class="headerlink" title="类加载子系统"></a>类加载子系统</h3><p>  加载.class文件</p>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>  方法区域存放了所加载的类的信息（名称、修饰符等）、类中的静态变量、类中定义为final类型的常量、类中的Field信息、类中的方法信息，当开发人员在程序中通过Class对象中的getName、isInterface等方法来获取信息时，这些数据都来源于方法区域，同时方法区域也是全局共享的，在一定的条件下它也会被GC，当方法区域需要使用的内存超过其允许的大小时，会抛出OutOfMemory的错误信息</p>
+<h3 id="java堆"><a href="#java堆" class="headerlink" title="java堆"></a>java堆</h3><p>  JVM用来存储对象实例以及数组值的区域，可以认为Java中所有通过new创建的对象的内存都在此分配，Heap中的对象的内存需要等待GC进行回收。<br>  堆有可以划分成新生代和老年代。老年代:对象每经过一次垃圾回收，它的”年龄”就会增长1，当”年龄”值到一定数值的时候就会将对象移到老年代区域中。新生代区域又分为eden，s0和s1。eden就是对象刚被new出来的时候存储的地方，s0和s1是两块大小相等并且可以互换角色的区域。GC垃圾回收的时候有一个复制算法，回收s0里面的垃圾，会将s0里面还存有被引用的对象复制到s1，然后将s0里面的实例全部清除。</p>
+<h3 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h3><p>  nio中可以是java直接操作堆外内存，提高运行的性能。</p>
+<h3 id="java栈"><a href="#java栈" class="headerlink" title="java栈"></a>java栈</h3><p>  用于存储局部变量表、操作栈、动态链接、方法出口等信息。每一个方法被调用直至执行完成的过程，就对应着一个栈帧在虚拟机栈中从入栈到出栈的过程。</p>
+<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>  与虚拟机栈所发挥的作用是非常相似的，其区别不过是虚拟机栈为虚拟机执行Java 方法（也就是字节码）服务，而本地方法栈则是为虚拟机使用到的Native 方法服务。虚拟机规范中对本地方法栈中的方法使用的语言、使用方式与数据结构并没有强制规定，因此具体的虚拟机可以自由实现它。</p>
+<h3 id="pc寄存器"><a href="#pc寄存器" class="headerlink" title="pc寄存器"></a>pc寄存器</h3><p>  是一块较小的内存空间，它的作用可以看做是当前线程所执行的字节码的行号指示器。在虚拟机的概念模型里（仅是概念模型，各种虚拟机可能会通过一些更高效的方式去实现），字节码解释器工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令，分支、循环、跳转、异常处理、线程恢复等基础功能都需要依赖这个计数器来完成。</p>
+<h3 id="执行引擎"><a href="#执行引擎" class="headerlink" title="执行引擎"></a>执行引擎</h3><p>  执行编译后的java字节码。</p>
+<h2 id="jvm参数"><a href="#jvm参数" class="headerlink" title="jvm参数"></a>jvm参数</h2><p>  -Xmx20m : 设置jvm的堆内存最大我20m。<br>  -Xms20m : 设置java堆的初始化内存为20m。<br>  -Xmn1m : 设置新生代的内存为1m<br>  -XX:SurvivorRatio=2 : 设置endn和s0或者endn和s1的比例。<br>  -XX:NewRatio=老年代/新生代。<br>  -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=d:/Test03.dump : 遇到内存溢出的时候将信息保存到文件，方便后期分析。<br>  -XX:+PrintGCDetails : 打印出详细的垃圾回收信息。<br>  -XX:+UseSerialGC : 串行的垃圾回收机制。<br>  -Xss5m : 设置java堆的大小<br>  -XX:MaxTenurlngThreshhold : 制定新生代对象经过多少次回收后进入老年代。默认为15</p>
 
           
         
@@ -348,7 +349,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -389,7 +390,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-count">19</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -399,7 +400,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">28</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -463,7 +464,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

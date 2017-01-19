@@ -264,8 +264,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/21/commond/" itemprop="url">
-                  commond
+                <a class="post-title-link" href="/2016/12/12/redis/" itemprop="url">
+                  redis
                 </a>
               
             
@@ -278,8 +278,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-21T21:26:07+08:00" content="2016-11-21">
-              2016-11-21
+            <time itemprop="dateCreated" datetime="2016-12-12T21:08:20+08:00" content="2016-12-12">
+              2016-12-12
             </time>
           </span>
 
@@ -308,21 +308,22 @@
       
         
           
-            <p>主要优点</p>
-<p>命令模式的主要优点如下：</p>
-<p>(1) 降低系统的耦合度。由于请求者与接收者之间不存在直接引用，因此请求者与接收者之间实现完全解耦，相同的请求者可以对应不同的接收者，同样，相同的接收者也可以供不同的请求者使用，两者之间具有良好的独立性。</p>
-<p>(2) 新的命令可以很容易地加入到系统中。由于增加新的具体命令类不会影响到其他类，因此增加新的具体命令类很容易，无须修改原有系统源代码，甚至客户类代码，满足“开闭原则”的要求。</p>
-<p>(3) 可以比较容易地设计一个命令队列或宏命令（组合命令）。</p>
-<p>(4) 为请求的撤销（Undo）和恢复（Redo）操作提供了一种设计和实现方案。</p>
-<p>主要缺点</p>
-<p>命令模式的主要缺点如下：</p>
-<p>使用命令模式可能会导致某些系统有过多的具体命令类。因为针对每一个对请求接收者的调用操作都需要设计一个具体命令类，因此在某些系统中可能需要提供大量的具体命令类，这将影响命令模式的使用。</p>
-<p>适用场景</p>
-<p>在以下情况下可以考虑使用命令模式：</p>
-<p>(1) 系统需要将请求调用者和请求接收者解耦，使得调用者和接收者不直接交互。请求调用者无须知道接收者的存在，也无须知道接收者是谁，接收者也无须关心何时被调用。</p>
-<p>(2) 系统需要在不同的时间指定请求、将请求排队和执行请求。一个命令对象和请求的初始调用者可以有不同的生命期，换言之，最初的请求发出者可能已经不在了，而命令对象本身仍然是活动的，可以通过该命令对象去调用请求接收者，而无须关心请求调用者的存在性，可以通过请求日志文件等机制来具体实现。</p>
-<p>(3) 系统需要支持命令的撤销（Undo）操作和恢复（Redo）操作。</p>
-<p>(4) 系统需要将一组操作组合在一起形成宏命令。</p>
+            <h2 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h2><h3 id="redis的安装-linux环境"><a href="#redis的安装-linux环境" class="headerlink" title="redis的安装(linux环境)"></a>redis的安装(linux环境)</h3><p>1 首先需要安装gcc，把下载好的redis-3.0.0-rc2.tar.gz 放到linux /usr/local文件夹下</p>
+<p>2 进行解压 tar -zxvf redis-3.0.0-rc2.tar.gz</p>
+<p>3 进入到redis-3.0.0目录下，进行编译 make</p>
+<p>4 进入到src下进行安装 make install  验证(ll查看src下的目录，有redis-server 、redis-cil即可)</p>
+<p>5 建立俩个文件夹存放redis命令和配置文件</p>
+<p>mkdir -p /usr/local/redis/etc</p>
+<p>mkdir -p /usr/local/redis/bin</p>
+<p>6 把redis-3.0.0下的redis.conf 移动到/usr/local/redis/etc下，</p>
+<p>   cp redis.conf /usr/local/redis/etc/</p>
+<p>7 把redis-3.0.0/src里的mkreleasehdr.sh、redis-benchmark、redis-check-aof、redis-check-dump、redis-cli、redis-server<br>文件移动到bin下，命令：</p>
+<p>mv mkreleasehdr.sh redis-benchmark redis-check-aof redis-check-dump redis-cli redis-server /usr/local/redis/bin</p>
+<p>8 启动时并指定配置文件：./redis-server /usr/local/redis/etc/redis.conf（注意要使用后台启动，所以修改redis.conf里的 daemonize 改为yes)</p>
+<p>9 验证启动是否成功：<br>ps -ef | grep redis 查看是否有redis服务 或者 查看端口：netstat -tunpl | grep 6379</p>
+<p>进入redis客户端 ./redis-cli 退出客户端quit<br>退出redis服务：<br>（1）pkill redis-server 、<br>（2）kill 进程号、</p>
+<p>（3）/usr/local/redis/bin/redis-cli shutdown</p>
+<h3 id="redis的简单命令"><a href="#redis的简单命令" class="headerlink" title="redis的简单命令"></a>redis的简单命令</h3><p>``` bash<br>set key value  设置键值<br>get key 根据key得到value<br>keys * 查看所有key<br>del key 删除key</p>
 
           
         
@@ -355,7 +356,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -396,7 +397,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-count">19</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -406,7 +407,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">28</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -470,7 +471,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
